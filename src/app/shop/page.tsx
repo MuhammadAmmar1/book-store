@@ -50,6 +50,10 @@ export default function ShopPage() {
   const { addToCart, toggleWishlist, wishlist } = useStore();
   const selectedCategory = getCategoryFromParam(searchParams.get("category"));
 
+  const minProductPrice = Math.min(...mockProducts.map((b) => b.price));
+  const maxProductPrice = Math.max(...mockProducts.map((b) => b.price));
+  const [priceRange, setPriceRange] = React.useState<[number, number]>([minProductPrice, maxProductPrice]);
+
   const setSelectedCategory = (cat: string | null) => {
     if (cat) {
       router.replace(`/shop?category=${encodeURIComponent(cat)}`, { scroll: false });
@@ -64,9 +68,10 @@ export default function ShopPage() {
       const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             book.author.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory ? book.genre === selectedCategory : true;
-      return matchesSearch && matchesCategory;
+      const matchesPrice = book.price >= priceRange[0] && book.price <= priceRange[1];
+      return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, priceRange]);
 
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
@@ -151,17 +156,45 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* Price Filter Placeholder */}
+                {/* Price Filter */}
                 <div className="space-y-4 border-t border-border/50 pt-8">
                   <h3 className="font-serif text-xl font-bold">Price Range</h3>
-                  <div className="h-2 bg-border/50 rounded-full w-full relative">
-                    <div className="absolute left-[20%] right-[30%] h-full bg-primary rounded-full" />
-                    <div className="absolute left-[20%] top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-md" />
-                    <div className="absolute right-[30%] top-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-primary rounded-full shadow-md" />
+                  <div className="relative h-2 bg-border/50 rounded-full">
+                    <div
+                      className="absolute h-full bg-primary rounded-full"
+                      style={{
+                        left: `${((priceRange[0] - minProductPrice) / (maxProductPrice - minProductPrice)) * 100}%`,
+                        right: `${100 - ((priceRange[1] - minProductPrice) / (maxProductPrice - minProductPrice)) * 100}%`,
+                      }}
+                    />
+                    <input
+                      type="range"
+                      min={minProductPrice}
+                      max={maxProductPrice}
+                      step={0.5}
+                      value={priceRange[0]}
+                      onChange={(e) => {
+                        const val = Math.min(Number(e.target.value), priceRange[1] - 0.5);
+                        setPriceRange([val, priceRange[1]]);
+                      }}
+                      className="absolute inset-0 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+                    />
+                    <input
+                      type="range"
+                      min={minProductPrice}
+                      max={maxProductPrice}
+                      step={0.5}
+                      value={priceRange[1]}
+                      onChange={(e) => {
+                        const val = Math.max(Number(e.target.value), priceRange[0] + 0.5);
+                        setPriceRange([priceRange[0], val]);
+                      }}
+                      className="absolute inset-0 w-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer"
+                    />
                   </div>
                   <div className="flex justify-between text-sm font-medium text-foreground/60">
-                    <span>$10</span>
-                    <span>$50</span>
+                    <span>${priceRange[0].toFixed(2)}</span>
+                    <span>${priceRange[1].toFixed(2)}</span>
                   </div>
                 </div>
               </aside>
@@ -210,7 +243,7 @@ export default function ShopPage() {
                 </div>
 
                 {/* Active Filters */}
-                {(selectedCategory || searchQuery) && (
+                {(selectedCategory || searchQuery || priceRange[0] !== minProductPrice || priceRange[1] !== maxProductPrice) && (
                   <div className="flex flex-wrap gap-2 mb-8">
                     {searchQuery && (
                       <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
@@ -224,8 +257,14 @@ export default function ShopPage() {
                         <button onClick={() => setSelectedCategory(null)}><X className="w-4 h-4 hover:text-black transition-colors"/></button>
                       </span>
                     )}
+                    {(priceRange[0] !== minProductPrice || priceRange[1] !== maxProductPrice) && (
+                      <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                        ${priceRange[0].toFixed(0)} — ${priceRange[1].toFixed(0)}
+                        <button onClick={() => setPriceRange([minProductPrice, maxProductPrice])}><X className="w-4 h-4 hover:text-black transition-colors"/></button>
+                      </span>
+                    )}
                     <button 
-                      onClick={() => { setSearchQuery(""); setSelectedCategory(null); }}
+                      onClick={() => { setSearchQuery(""); setSelectedCategory(null); setPriceRange([minProductPrice, maxProductPrice]); }}
                       className="text-sm font-medium text-foreground/50 hover:text-foreground underline underline-offset-4 ml-2"
                     >
                       Clear All
@@ -307,7 +346,7 @@ export default function ShopPage() {
                     title="No Books Found"
                     description="We couldn't find any books matching your current filters. Try adjusting your search or clearing the filters."
                     ctaLabel="Reset Filters"
-                    onCta={() => { setSearchQuery(""); setSelectedCategory(null); }}
+                    onCta={() => { setSearchQuery(""); setSelectedCategory(null); setPriceRange([minProductPrice, maxProductPrice]); }}
                   />
 
                 )}
