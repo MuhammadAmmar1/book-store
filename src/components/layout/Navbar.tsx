@@ -99,6 +99,74 @@ export function Navbar() {
         </div>
       </motion.header>
 
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-50 flex md:hidden">
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-sm bg-card h-full shadow-2xl flex flex-col border-r border-border/50"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-border/50">
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col">
+                  <span className="font-serif text-2xl font-bold tracking-wide">Leaf & Lantern</span>
+                  <span className="text-[10px] uppercase tracking-widest text-foreground/60">Bookstore & Library</span>
+                </Link>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="w-8 h-8 rounded-full bg-background flex items-center justify-center hover:scale-110 transition-transform">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <nav className="flex-1 overflow-y-auto p-6 space-y-1">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-4 py-3 rounded-xl text-lg font-medium text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="p-6 border-t border-border/50 space-y-4">
+                <div className="flex items-center justify-around">
+                  <button onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors">
+                    <Search className="w-5 h-5" />
+                    <span className="text-[10px] font-medium uppercase tracking-widest">Search</span>
+                  </button>
+                  <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors relative">
+                    <Heart className="w-5 h-5" />
+                    {wishlist.length > 0 && (
+                      <span className="absolute -top-1 -right-3 bg-primary text-primary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center">{wishlist.length}</span>
+                    )}
+                    <span className="text-[10px] font-medium uppercase tracking-widest">Wishlist</span>
+                  </Link>
+                  <button onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors relative">
+                    <ShoppingBag className="w-5 h-5" />
+                    {cart.length > 0 && (
+                      <span className="absolute -top-1 -right-3 bg-secondary text-secondary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
+                    )}
+                    <span className="text-[10px] font-medium uppercase tracking-widest">Cart</span>
+                  </button>
+                  <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors">
+                    {mounted ? (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />) : null}
+                    <span className="text-[10px] font-medium uppercase tracking-widest">{mounted ? (theme === "dark" ? "Light" : "Dark") : ""}</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Mini Cart Drawer */}
       <MiniCart />
 
