@@ -1,0 +1,261 @@
+@import "tailwindcss";
+
+/* =============================================
+   DESIGN TOKENS
+   ============================================= */
+:root {
+  --background: #FAF8F5;
+  --foreground: #1B1B1B;
+  --card: #ffffff;
+  --card-foreground: #1B1B1B;
+  --primary: #1E3A5F;
+  --primary-foreground: #ffffff;
+  --secondary: #D4A373;
+  --secondary-foreground: #ffffff;
+  --accent: #6B8E6E;
+  --accent-foreground: #ffffff;
+  --border: #e5e7eb;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --ring: #1E3A5F;
+  --radius: 0.75rem;
+}
+
+/* =============================================
+   DARK MODE TOKENS
+   ============================================= */
+.dark {
+  --background: #0c0f14;
+  --foreground: #e8e6e1;
+  --card: #13181f;
+  --card-foreground: #e8e6e1;
+  --primary: #4a7ab5;
+  --primary-foreground: #ffffff;
+  --secondary: #c9915a;
+  --secondary-foreground: #0c0f14;
+  --accent: #7fa882;
+  --accent-foreground: #ffffff;
+  --border: #232b36;
+  --muted: #1a2030;
+  --muted-foreground: #8896a7;
+  --ring: #4a7ab5;
+}
+
+/* =============================================
+   TAILWIND THEME BRIDGE
+   ============================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.2s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Focus visible — keyboard only */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Skip to content link (accessibility) */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: top 0.15s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* =============================================
+   ANIMATIONS & KEYFRAMES
+   ============================================= */
+
+/* Shimmer for skeleton loaders */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Fade in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Gentle float */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Ripple */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* =============================================
+   UTILITIES
+   ============================================= */
+@layer utilities {
+  /* Glassmorphism panel */
+  .glass-panel {
+    @apply bg-white/70 dark:bg-black/40 backdrop-blur-md border border-white/20 dark:border-white/10;
+  }
+
+  /* Skeleton shimmer base */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 0%,
+      color-mix(in srgb, var(--muted) 60%, var(--background)) 50%,
+      var(--muted) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+    border-radius: var(--radius);
+  }
+
+  /* Floating animation */
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Reading progress bar */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    z-index: 9999;
+    transform-origin: left;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Smooth card hover lift */
+  .card-lift {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgb(0 0 0 / 0.15);
+  }
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .skeleton {
+    animation: none;
+    background: var(--muted);
+  }
+}
+
+/* =============================================
+   SCROLLBAR STYLING
+   ============================================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* =============================================
+   SELECTION
+   ============================================= */
+::selection {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  color: var(--foreground);
+}
+
+/* =============================================
+   IMAGE & MEDIA
+   ============================================= */
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* =============================================
+   RIPPLE BUTTON EFFECT
+   ============================================= */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple .ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(0);
+  animation: ripple 0.55s linear;
+  pointer-events: none;
+}
+
