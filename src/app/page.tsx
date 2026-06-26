@@ -121,7 +121,7 @@ export default function Home() {
                 transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
                 className="absolute top-[5%] right-[15%] w-[280px] aspect-[2/3] rounded-2xl shadow-2xl overflow-hidden z-30 border border-white/20 dark:border-white/10"
               >
-                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&auto=format&fit=crop" alt="The Midnight Library Book Cover" className="object-cover w-full h-full" />
+                <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=800&h=1200&fit=crop&crop=center&auto=format" alt="The Midnight Library Book Cover" className="object-cover w-full h-full" />
               </motion.div>
 
               <motion.div
@@ -130,7 +130,7 @@ export default function Home() {
                 transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1 }}
                 className="absolute top-[35%] left-[5%] w-[240px] aspect-[2/3] rounded-2xl shadow-xl overflow-hidden z-20 border border-white/20 dark:border-white/10"
               >
-                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop" alt="Atomic Habits Book Cover" className="object-cover w-full h-full" />
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&h=1200&fit=crop&crop=center&auto=format" alt="Atomic Habits Book Cover" className="object-cover w-full h-full" />
               </motion.div>
 
               <motion.div
@@ -138,7 +138,7 @@ export default function Home() {
                 transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 2 }}
                 className="absolute bottom-[5%] right-[5%] w-[220px] aspect-[2/3] rounded-2xl shadow-lg overflow-hidden z-10 border border-white/20 dark:border-white/10"
               >
-                <img src="https://images.unsplash.com/photo-1614544048536-0d28caf77f41?q=80&w=800&auto=format&fit=crop" alt="Dune Book Cover" className="object-cover w-full h-full" />
+                <img src="https://images.unsplash.com/photo-1614544048536-0d28caf77f41?q=80&w=800&h=1200&fit=crop&crop=center&auto=format" alt="Dune Book Cover" className="object-cover w-full h-full" />
               </motion.div>
             </motion.div>
           </div>
