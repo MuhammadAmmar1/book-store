@@ -3,12 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Heart, Plus, Minus, ArrowRight, ShieldCheck, CreditCard, Tag } from "lucide-react";
+import { Trash2, Heart, Plus, Minus, ArrowRight, ShieldCheck, CreditCard, Tag, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useStore } from "@/store/StoreContext";
 import { cn } from "@/utils/cn";
+import { EmptyState } from "@/components/ui/EmptyState";
+
 
 const luxuryEase = [0.22, 1, 0.36, 1];
 
@@ -40,23 +42,14 @@ export default function CartPage() {
         <h1 className="font-serif text-4xl md:text-5xl font-bold mb-12">Shopping Cart</h1>
 
         {cart.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="py-20 flex flex-col items-center justify-center text-center bg-card/20 rounded-[3rem] border border-border/50 max-w-4xl mx-auto"
-          >
-            <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-8">
-              <ShoppingBagIcon className="w-10 h-10 text-primary/50" />
-            </div>
-            <h2 className="font-serif text-3xl font-bold mb-4">Your Cart is Empty</h2>
-            <p className="text-foreground/60 text-lg mb-8 max-w-md">
-              Discover your next favorite story in our collection of curated masterpieces.
-            </p>
-            <Link href="/shop">
-              <Button size="lg" className="rounded-full px-10 text-lg h-14 shadow-lg hover:-translate-y-1 transition-transform">
-                Start Shopping
-              </Button>
-            </Link>
-          </motion.div>
+          <EmptyState
+            Icon={ShoppingBag}
+            title="Your Cart is Empty"
+            description="Discover your next favorite story in our curated collection of masterpieces."
+            ctaLabel="Start Shopping"
+            ctaHref="/shop"
+          />
+
         ) : (
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
             {/* LEFT: CART ITEMS */}

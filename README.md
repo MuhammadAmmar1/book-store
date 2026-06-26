@@ -1,33 +1,195 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Leaf & Lantern — Premium Online Bookstore
 
-## Getting Started
+> *"Combine the elegance of a modern bookstore with the warmth of an old library."*
 
-First, run the development server:
+A production-quality, full-featured online bookstore built as a frontend portfolio project. Leaf & Lantern blends editorial design, premium micro-interactions, and a seamless shopping experience — crafted to feel handmade, not AI-generated.
+
+---
+
+## ✨ Features
+
+### 🛍️ Shopping Experience
+- **Curated Catalog** — Browse 16+ books with advanced filtering by genre, search, and sort
+- **Product Detail Pages** — Rich PDP with image zoom, ratings, format selector, stock status, and share functionality
+- **Persistent Cart** — Add, remove, and update quantities; saved to `localStorage`
+- **Wishlist** — Save books for later with an animated heart toggle
+- **Coupon Codes** — Apply `READ10` for 10% off
+
+### 🛒 Checkout & Orders
+- **Multi-step Checkout** — Shipping → Payment → Confirmation flow with step persistence via `sessionStorage`
+- **Shipping Methods** — Selectable delivery options with real-time price updates
+- **Form Validation** — Native HTML5 + custom validation preventing invalid submissions
+- **Order Tracking** — Track orders by ID via `/track` with animated timeline
+
+### 🎨 Design & UX
+- **Dark Mode** — Handcrafted dark palette (not just inverted colors), persisted via `localStorage`
+- **Page Transitions** — Subtle fade+slide between all routes via Framer Motion
+- **Reading Progress Bar** — Spring-animated progress indicator on scroll
+- **Back to Top** — Floating button with smooth scroll, auto-shows on scroll
+- **Micro-interactions** — Ripple buttons, card lifts, heart fill animations, hover glows
+- **Skeleton Loaders** — Shimmer placeholders for loading states
+- **Empty States** — Animated, illustrated states for Cart, Wishlist, Search, 404
+- **Toast Notifications** — Slide-in alerts for cart, checkout, and errors
+
+### ♿ Accessibility
+- Skip to content link for keyboard users
+- `aria-label` on all interactive elements
+- `aria-live` regions for dynamic announcements
+- Visible `focus-visible` states on all focusable elements
+- `prefers-reduced-motion` media query respected
+- Semantic HTML5 throughout
+
+### 🔍 SEO
+- Dynamic `<title>` templates per page
+- Open Graph & Twitter Card metadata
+- JSON-LD structured data (Bookstore + Product schemas)
+- `sitemap.xml` auto-generated from routes + products
+- `robots.txt` with proper crawl rules
+- Canonical URLs
+
+---
+
+## 🛠 Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| **Next.js 15** (App Router) | React framework with file-based routing |
+| **TypeScript** | Type safety throughout |
+| **Tailwind CSS v4** | Utility-first styling with CSS custom properties |
+| **Framer Motion** | Page transitions, scroll reveals, micro-animations |
+| **Lucide React** | Consistent, accessible icon set |
+| **next-themes** | System-aware dark mode |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/yourusername/leaf-and-lantern.git
+cd leaf-and-lantern
+
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📁 Folder Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── about/              # About page
+│   ├── cart/               # Shopping cart
+│   ├── checkout/           # Multi-step checkout flow
+│   ├── contact/            # Contact form
+│   ├── shop/               # Book catalog
+│   │   └── [id]/           # Dynamic product detail pages
+│   ├── track/              # Order tracking
+│   ├── wishlist/           # Saved books
+│   ├── layout.tsx          # Root layout (SEO, global providers)
+│   ├── not-found.tsx       # 404 page
+│   ├── page.tsx            # Homepage
+│   ├── sitemap.ts          # Dynamic sitemap
+│   └── robots.ts           # robots.txt
+│
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.tsx      # Site navigation with cart/wishlist/search
+│   │   └── Footer.tsx      # Site footer with links
+│   ├── providers/
+│   │   ├── ThemeProvider.tsx    # next-themes wrapper
+│   │   └── PageTransition.tsx   # Framer Motion page transitions
+│   └── ui/
+│       ├── BackToTop.tsx        # Floating back-to-top button
+│       ├── Button.tsx           # Custom button with ripple effect
+│       ├── EmptyState.tsx       # Reusable animated empty state
+│       ├── ReadingProgressBar.tsx  # Scroll progress bar
+│       ├── SkeletonCard.tsx     # Shimmer loading placeholder
+│       └── Toast.tsx            # Notification system + useToast hook
+│
+├── data/
+│   └── mockProducts.ts     # 16 curated book entries
+│
+├── hooks/
+│   ├── useLocalStorage.ts  # Type-safe localStorage hook
+│   └── useScrollReveal.ts  # Framer Motion inView wrapper
+│
+├── store/
+│   └── StoreContext.tsx    # Global cart/wishlist state (Context API)
+│
+└── utils/
+    └── cn.ts               # Tailwind class merging utility
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
+
+## 🔑 Coupon Codes
+
+| Code | Discount |
+|---|---|
+| `READ10` | 10% off total |
+
+---
+
+## 🗺️ Pages
+
+| Route | Description |
+|---|---|
+| `/` | Homepage — Hero, Best Sellers, Categories, Newsletter |
+| `/shop` | Catalog with search, category filters, grid/list toggle |
+| `/shop/[id]` | Product detail — images, description, add to cart, wishlist |
+| `/cart` | Cart with quantity controls, coupon, and order summary |
+| `/wishlist` | Saved books |
+| `/checkout` | 3-step checkout: Shipping → Payment → Confirmation |
+| `/track` | Order tracking with animated timeline |
+| `/about` | Brand story and team |
+| `/contact` | Contact form |
+
+---
+
+## 🔮 Future Enhancements
+
+- [ ] User authentication (NextAuth.js)
+- [ ] Real backend / database (Prisma + PostgreSQL)
+- [ ] Stripe payment integration
+- [ ] Book reviews & ratings system
+- [ ] Recently Viewed (persisted to localStorage)
+- [ ] Advanced search with Algolia
+- [ ] Inventory management
+- [ ] Email notifications on order confirmation
+
+---
+
+## 📜 License
+
+MIT License — free to use for personal and commercial projects.
+
+---
+
+## 👤 Author
+
+Built with ❤️ as a frontend portfolio project.
+Designed to demonstrate production-quality React/Next.js development.
 
 ## Deploy on Vercel
 

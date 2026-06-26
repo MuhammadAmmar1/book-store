@@ -23,6 +23,8 @@ import { Footer } from "@/components/layout/Footer";
 import { mockProducts, Book } from "@/data/mockProducts";
 import { cn } from "@/utils/cn";
 import { useStore } from "@/store/StoreContext";
+import { EmptyState } from "@/components/ui/EmptyState";
+
 
 const luxuryEase = [0.22, 1, 0.36, 1];
 
@@ -300,19 +302,14 @@ export default function ShopPage() {
                     ))}
                   </div>
                 ) : (
-                  /* Empty State */
-                  <div className="py-20 text-center flex flex-col items-center">
-                    <div className="w-24 h-24 bg-card rounded-full flex items-center justify-center mb-6 shadow-sm border border-border/50">
-                      <Search className="w-10 h-10 text-foreground/30" />
-                    </div>
-                    <h3 className="font-serif text-3xl font-bold mb-4">No Books Found</h3>
-                    <p className="text-foreground/60 max-w-md mx-auto mb-8 text-lg">
-                      We couldn&apos;t find any books matching your current filters. Try adjusting your search criteria.
-                    </p>
-                    <Button onClick={() => { setSearchQuery(""); setSelectedCategory(null); }} size="lg" className="rounded-full">
-                      Reset All Filters
-                    </Button>
-                  </div>
+                  <EmptyState
+                    Icon={Search}
+                    title="No Books Found"
+                    description="We couldn't find any books matching your current filters. Try adjusting your search or clearing the filters."
+                    ctaLabel="Reset Filters"
+                    onCta={() => { setSearchQuery(""); setSelectedCategory(null); }}
+                  />
+
                 )}
 
                 {/* Pagination Placeholder */}

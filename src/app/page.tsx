@@ -310,8 +310,7 @@ export default function Home() {
           </div>
         </section>
 
-        5. NEWSLETTER (Refined Glassmorphism)
-
+        {/* 5. NEWSLETTER (Refined Glassmorphism) */}
         <section className="py-40 relative overflow-hidden">
           {/* Noise and Gradient Background */}
           <div className="absolute inset-0 bg-background">

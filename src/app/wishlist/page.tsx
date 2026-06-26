@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useStore } from "@/store/StoreContext";
+import { EmptyState } from "@/components/ui/EmptyState";
+
 
 const luxuryEase = [0.22, 1, 0.36, 1];
 
@@ -30,26 +32,14 @@ export default function WishlistPage() {
 
         <AnimatePresence mode="popLayout">
           {wishlist.length === 0 ? (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
-              className="py-24 flex flex-col items-center justify-center text-center max-w-lg mx-auto"
-            >
-              <div className="w-24 h-24 bg-primary/5 rounded-full flex items-center justify-center mb-8 relative">
-                <Heart className="w-10 h-10 text-primary/40" />
-                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute -top-1 -right-1">
-                  <Star className="w-6 h-6 text-secondary" />
-                </motion.div>
-              </div>
-              <h2 className="font-serif text-3xl font-bold mb-4">Your Wishlist is Waiting</h2>
-              <p className="text-foreground/60 text-lg mb-8 leading-relaxed">
-                You haven't saved any books yet. Explore our curated collections to find your next great read and save them here.
-              </p>
-              <Link href="/shop">
-                <Button size="lg" className="rounded-full px-8 text-lg h-14 shadow-lg hover:-translate-y-1 transition-transform">
-                  Discover Books
-                </Button>
-              </Link>
-            </motion.div>
+          <EmptyState
+            Icon={Heart}
+            title="Your Wishlist is Waiting"
+            description="You haven't saved any books yet. Explore our curated collections and save your favorites here."
+            ctaLabel="Discover Books"
+            ctaHref="/shop"
+          />
+
           ) : (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
