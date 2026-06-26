@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     "Discover curated collections of books that inspire imagination, creativity, and lifelong learning. Shop fiction, non-fiction, self-growth, and more.",
   keywords: ["bookstore", "books", "online bookstore", "buy books", "leaf and lantern"],
   authors: [{ name: "Leaf & Lantern" }],
+  icons: {
+    icon: "/icon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
