@@ -1,11 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Search, ShoppingBag, Heart, Menu, X, Moon, Sun, Plus, Minus, Trash2 } from "lucide-react";
-import { useTheme } from "@teispace/next-themes";
+import { useTheme } from "next-themes";
 import { cn } from "@/utils/cn";
 import { useStore } from "@/store/StoreContext";
 import { mockProducts } from "@/data/mockProducts";
@@ -19,7 +18,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => {
     setMounted(true);
   }, []);
@@ -83,13 +82,11 @@ export function Navbar() {
             </Link>
             <button onClick={() => setIsCartOpen(true)} className="text-foreground/80 hover:text-primary transition-colors relative hover:scale-110 active:scale-95">
               <ShoppingBag className="w-5 h-5" />
-              <Hydration>
-                {cart.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                    {cart.reduce((acc, item) => acc + item.quantity, 0)}
-                  </span>
-                )}
-              </Hydration>
+              {cart.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                </span>
+              )}
             </button>
             <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-foreground/80 hover:text-primary transition-colors hover:scale-110 active:scale-95">
               {mounted ? (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />) : null}
@@ -149,9 +146,7 @@ function MiniCart() {
                 <div className="space-y-6">
                   {cart.map((item) => (
                     <div key={item.id} className="flex gap-4 group">
-                      <div className="w-20 aspect-[2/3] rounded-lg overflow-hidden shadow-sm border border-border/50 shrink-0">
-                        <img src={item.coverImage} className="w-full h-full object-cover" alt={item.title} />
-                      </div>
+                      <img src={item.coverImage} className="w-20 aspect-[2/3] object-cover rounded-lg shadow-sm border border-border/50" alt={item.title} />
                       <div className="flex-1 flex flex-col">
                         <div className="flex justify-between">
                           <h4 className="font-serif font-bold text-base leading-tight line-clamp-1">{item.title}</h4>
@@ -212,6 +207,7 @@ function SearchModal() {
       b.author.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 4);
   }, [query]);
+
   // Handle ESC
   React.useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => { if (e.key === "Escape") setIsSearchOpen(false); };
@@ -257,9 +253,7 @@ function SearchModal() {
                       {mockProducts.slice(0, 3).map(b => (
                         <li key={b.id}>
                           <Link href={`/shop/${b.id}`} onClick={() => setIsSearchOpen(false)} className="flex items-center gap-3 group">
-                            <div className="w-10 aspect-[2/3] rounded overflow-hidden shadow-sm border border-border/50 shrink-0">
-                              <img src={b.coverImage} className="w-full h-full object-cover" />
-                            </div>
+                            <img src={b.coverImage} className="w-10 aspect-[2/3] object-cover rounded shadow-sm border border-border/50" />
                             <span className="font-medium group-hover:text-primary transition-colors line-clamp-1">{b.title}</span>
                           </Link>
                         </li>
@@ -280,9 +274,7 @@ function SearchModal() {
                   <h4 className="font-serif font-bold text-foreground/50 mb-4 uppercase tracking-widest text-xs">Search Results</h4>
                   {results.map((book) => (
                     <Link key={book.id} href={`/shop/${book.id}`} onClick={() => setIsSearchOpen(false)} className="flex items-start gap-4 group p-3 -mx-3 rounded-xl hover:bg-primary/5 transition-colors">
-                      <div className="w-16 aspect-[2/3] rounded overflow-hidden shadow-sm border border-border/50 shrink-0 group-hover:shadow-md transition-shadow">
-                        <img src={book.coverImage} className="w-full h-full object-cover" />
-                      </div>
+                      <img src={book.coverImage} className="w-16 aspect-[2/3] object-cover rounded shadow-sm border border-border/50 group-hover:shadow-md transition-shadow" />
                       <div>
                         <h5 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1">{book.title}</h5>
                         <p className="text-sm text-foreground/60">{book.author} • {book.genre}</p>
