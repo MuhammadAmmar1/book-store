@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Search, ShoppingBag, Heart, Menu, X, Moon, Sun, Plus, Minus, Trash2 } from "lucide-react";
 import { useTheme } from "@teispace/next-themes";
@@ -24,6 +25,9 @@ export function Navbar() {
   }, []);
 
   const { cart, wishlist, isCartOpen, setIsCartOpen, isSearchOpen, setIsSearchOpen } = useStore();
+  const pathname = usePathname();
+
+  const isActive = (href: string) => href === "/" ? pathname === href : pathname.startsWith(href);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -56,12 +60,15 @@ export function Navbar() {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors relative group">
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full" />
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link key={link.name} href={link.href} className={cn("text-sm font-medium transition-colors relative group", active ? "text-primary" : "text-foreground/80 hover:text-primary")}>
+                  {link.name}
+                  <span className={cn("absolute -bottom-1 left-0 h-[2px] bg-primary transition-all duration-300", active ? "w-full" : "w-0 group-hover:w-full")} />
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Icons */}
@@ -124,16 +131,19 @@ export function Navbar() {
               </div>
 
               <nav className="flex-1 overflow-y-auto p-6 space-y-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-xl text-lg font-medium text-foreground/80 hover:bg-primary/5 hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const active = isActive(link.href);
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn("block px-4 py-3 rounded-xl text-lg font-medium transition-colors", active ? "bg-primary/10 text-primary font-bold" : "text-foreground/80 hover:bg-primary/5 hover:text-primary")}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
               </nav>
 
               <div className="p-6 border-t border-border/50 space-y-4">
