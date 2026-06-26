@@ -335,7 +335,9 @@ export default function ShopPage() {
             <div className="flex gap-6 overflow-x-auto pb-8 snap-x scrollbar-hide">
               {mockProducts.slice(4, 8).map((book) => (
                 <div key={book.id} className="w-48 shrink-0 snap-start">
-                  <img src={book.coverImage} alt={book.title} className="w-full aspect-[2/3] object-cover rounded-xl shadow-sm mb-4 border border-border/40" />
+                  <div className="w-full aspect-[2/3] rounded-xl overflow-hidden shadow-sm mb-4 border border-border/40">
+                    <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover" />
+                  </div>
                   <h4 className="font-serif font-bold text-sm line-clamp-1">{book.title}</h4>
                   <p className="text-xs text-foreground/50">${book.price.toFixed(2)}</p>
                 </div>
@@ -374,7 +376,9 @@ export default function ShopPage() {
               
               <div className="md:w-2/5 shrink-0 bg-secondary/5 p-8 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
-                <img src={selectedBook.coverImage} alt={selectedBook.title} className="w-full max-w-[240px] aspect-[2/3] object-cover rounded-xl shadow-2xl relative z-10" />
+                <div className="w-full max-w-[240px] aspect-[2/3] rounded-xl overflow-hidden shadow-2xl relative z-10">
+                  <img src={selectedBook.coverImage} alt={selectedBook.title} className="w-full h-full object-cover" />
+                </div>
               </div>
               
               <div className="p-8 md:p-12 flex-1 overflow-y-auto">

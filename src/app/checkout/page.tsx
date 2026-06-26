@@ -34,7 +34,8 @@ const fadeUp = {
 };
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, clearCart } = useStore();
+  const { cart, cartTotal, lastPurchased, clearCart } = useStore();
+  const [orderTotals, setOrderTotals] = React.useState<{ subtotal: number; tax: number; shipping: number; total: number } | null>(null);
   const tax = cartTotal * 0.08;
 
   const [toastMessage, setToastMessage] = React.useState<{ type: "error" | "success", text: string } | null>(null);
@@ -100,6 +101,7 @@ export default function CheckoutPage() {
     } else if (currentStep === 2) {
       const newOrderId = "LNL-" + Math.floor(1000 + Math.random() * 9000);
       setOrderId(newOrderId);
+      setOrderTotals({ subtotal: cartTotal, tax, shipping, total: finalTotal });
       clearCart();
       setCurrentStep(3);
       showToast("success", "Order placed successfully! Thank you for your purchase.");
@@ -284,11 +286,13 @@ export default function CheckoutPage() {
 
               {/* Items */}
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-1">
-                {cart.length === 0 ? (
+                {(currentStep === 3 ? lastPurchased : cart).length === 0 ? (
                   <p className="text-foreground/50 text-sm text-center py-4">No items in cart.</p>
-                ) : cart.map((item) => (
+                ) : (currentStep === 3 ? lastPurchased : cart).map((item) => (
                   <div key={item.id} className="flex gap-3">
-                    <img src={item.coverImage} className="w-12 aspect-[2/3] object-cover rounded-lg shadow-sm border border-border/50 shrink-0" alt={item.title} />
+                    <div className="w-12 aspect-[2/3] rounded-lg overflow-hidden shadow-sm border border-border/50 shrink-0">
+                      <img src={item.coverImage} className="w-full h-full object-cover" alt={item.title} />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm line-clamp-1">{item.title}</p>
                       <p className="text-xs text-foreground/50">Qty: {item.quantity}</p>
@@ -299,14 +303,14 @@ export default function CheckoutPage() {
               </div>
 
               <div className="space-y-3 border-y border-border/50 py-5 mb-5 text-sm">
-                <div className="flex justify-between"><span className="text-foreground/60">Subtotal</span><span className="font-medium">${cartTotal.toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-foreground/60">Shipping</span><span className="font-medium">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span></div>
-                <div className="flex justify-between"><span className="text-foreground/60">Tax (8%)</span><span className="font-medium">${tax.toFixed(2)}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Subtotal</span><span className="font-medium">${(orderTotals ? orderTotals.subtotal : cartTotal).toFixed(2)}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Shipping</span><span className="font-medium">{orderTotals ? (orderTotals.shipping === 0 ? "Free" : `$${orderTotals.shipping.toFixed(2)}`) : (shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`)}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Tax (8%)</span><span className="font-medium">${(orderTotals ? orderTotals.tax : tax).toFixed(2)}</span></div>
               </div>
 
               <div className="flex justify-between items-end mb-8">
                 <span className="font-serif text-lg font-bold text-foreground/60">Total</span>
-                <span className="font-sans text-3xl font-bold">${finalTotal.toFixed(2)}</span>
+                <span className="font-sans text-3xl font-bold">${(orderTotals ? orderTotals.total : finalTotal).toFixed(2)}</span>
               </div>
 
               {currentStep < 3 && (

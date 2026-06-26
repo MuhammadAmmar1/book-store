@@ -390,9 +390,13 @@ export default function ProductDetailsPage() {
           <h2 className="font-serif text-3xl font-bold mb-10 text-center">Frequently Bought Together</h2>
           <div className="flex flex-col lg:flex-row items-center justify-center gap-8 bg-card/20 p-8 rounded-[2rem] border border-border/50 max-w-4xl mx-auto">
             <div className="flex items-center gap-4">
-               <img src={book.coverImage} className="w-24 aspect-[2/3] object-cover rounded-md shadow-md border border-border/50" />
+               <div className="w-24 aspect-[2/3] rounded-md overflow-hidden shadow-md border border-border/50 shrink-0">
+                 <img src={book.coverImage} className="w-full h-full object-cover" />
+               </div>
                <span className="text-4xl text-foreground/30 font-light">+</span>
-               <img src={relatedBooks[0].coverImage} className="w-24 aspect-[2/3] object-cover rounded-md shadow-md border border-border/50" />
+               <div className="w-24 aspect-[2/3] rounded-md overflow-hidden shadow-md border border-border/50 shrink-0">
+                 <img src={relatedBooks[0].coverImage} className="w-full h-full object-cover" />
+               </div>
             </div>
             <div className="text-center lg:text-left flex-1">
                <div className="text-3xl font-bold font-sans mb-2">${(book.price + relatedBooks[0].price).toFixed(2)}</div>
@@ -435,7 +439,9 @@ export default function ProductDetailsPage() {
           >
             <div className="container mx-auto flex items-center justify-between">
                <div className="hidden md:flex items-center gap-4">
-                 <img src={book.coverImage} className="w-12 aspect-[2/3] object-cover rounded shadow-sm" />
+                  <div className="w-12 aspect-[2/3] rounded overflow-hidden shadow-sm shrink-0">
+                    <img src={book.coverImage} className="w-full h-full object-cover" />
+                  </div>
                  <div>
                    <h4 className="font-serif font-bold">{book.title}</h4>
                    <p className="text-xs text-foreground/60">{book.author}</p>

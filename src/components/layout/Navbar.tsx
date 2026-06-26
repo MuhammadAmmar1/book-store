@@ -1,14 +1,16 @@
 "use client";
 
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Search, ShoppingBag, Heart, Menu, X, Moon, Sun, Plus, Minus, Trash2 } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@teispace/next-themes";
 import { cn } from "@/utils/cn";
 import { useStore } from "@/store/StoreContext";
 import { mockProducts } from "@/data/mockProducts";
 import { Button } from "@/components/ui/Button";
+import Hydration from "@/components/providers/Hydration";
 
 const luxuryEase = [0.22, 1, 0.36, 1];
 
@@ -17,11 +19,11 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
   React.useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   const { cart, wishlist, isCartOpen, setIsCartOpen, isSearchOpen, setIsSearchOpen } = useStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -70,19 +72,24 @@ export function Navbar() {
             </button>
             <Link href="/wishlist" className="text-foreground/80 hover:text-primary transition-colors relative hover:scale-110 active:scale-95">
               <Heart className="w-5 h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                  {wishlist.length}
-                </span>
-              )}
+
+              <Hydration>
+                {wishlist.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                    {wishlist.length}
+                  </span>
+                )}
+              </Hydration>
             </Link>
             <button onClick={() => setIsCartOpen(true)} className="text-foreground/80 hover:text-primary transition-colors relative hover:scale-110 active:scale-95">
               <ShoppingBag className="w-5 h-5" />
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
-                </span>
-              )}
+              <Hydration>
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                    {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                  </span>
+                )}
+              </Hydration>
             </button>
             <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-foreground/80 hover:text-primary transition-colors hover:scale-110 active:scale-95">
               {mounted ? (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />) : null}
@@ -112,12 +119,12 @@ function MiniCart() {
     <AnimatePresence>
       {isCartOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setIsCartOpen(false)}
             className="absolute inset-0 bg-background/60 backdrop-blur-sm"
           />
-          <motion.div 
+          <motion.div
             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="relative w-full max-w-md bg-card h-full shadow-2xl flex flex-col border-l border-border/50"
           >
@@ -142,7 +149,9 @@ function MiniCart() {
                 <div className="space-y-6">
                   {cart.map((item) => (
                     <div key={item.id} className="flex gap-4 group">
-                      <img src={item.coverImage} className="w-20 aspect-[2/3] object-cover rounded-lg shadow-sm border border-border/50" alt={item.title} />
+                      <div className="w-20 aspect-[2/3] rounded-lg overflow-hidden shadow-sm border border-border/50 shrink-0">
+                        <img src={item.coverImage} className="w-full h-full object-cover" alt={item.title} />
+                      </div>
                       <div className="flex-1 flex flex-col">
                         <div className="flex justify-between">
                           <h4 className="font-serif font-bold text-base leading-tight line-clamp-1">{item.title}</h4>
@@ -153,9 +162,9 @@ function MiniCart() {
                         <p className="text-xs text-foreground/50 mb-auto">{item.author}</p>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center border border-border/60 rounded-full bg-background px-2 py-1">
-                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1 hover:text-primary"><Minus className="w-3 h-3"/></button>
+                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1 hover:text-primary"><Minus className="w-3 h-3" /></button>
                             <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1 hover:text-primary"><Plus className="w-3 h-3"/></button>
+                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1 hover:text-primary"><Plus className="w-3 h-3" /></button>
                           </div>
                           <p className="font-bold">${(item.price * item.quantity).toFixed(2)}</p>
                         </div>
@@ -178,7 +187,7 @@ function MiniCart() {
                 </div>
                 <div className="space-y-3">
                   <Link href="/cart" onClick={() => setIsCartOpen(false)}>
-                     <Button className="w-full rounded-xl h-14 text-base shadow-lg hover:-translate-y-1 transition-all">Proceed to Checkout</Button>
+                    <Button className="w-full rounded-xl h-14 text-base shadow-lg hover:-translate-y-1 transition-all">Proceed to Checkout</Button>
                   </Link>
                   <Button variant="ghost" className="w-full rounded-xl h-12" onClick={() => setIsCartOpen(false)}>Continue Shopping</Button>
                 </div>
@@ -198,15 +207,14 @@ function SearchModal() {
 
   const results = React.useMemo(() => {
     if (!query.trim()) return [];
-    return mockProducts.filter(b => 
-      b.title.toLowerCase().includes(query.toLowerCase()) || 
+    return mockProducts.filter(b =>
+      b.title.toLowerCase().includes(query.toLowerCase()) ||
       b.author.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 4);
   }, [query]);
-
   // Handle ESC
   React.useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { if(e.key === "Escape") setIsSearchOpen(false); };
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === "Escape") setIsSearchOpen(false); };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, [setIsSearchOpen]);
@@ -215,22 +223,22 @@ function SearchModal() {
     <AnimatePresence>
       {isSearchOpen && (
         <div className="fixed inset-0 z-50 flex justify-center pt-[10vh] px-4">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setIsSearchOpen(false)}
             className="absolute inset-0 bg-background/80 backdrop-blur-md"
           />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: luxuryEase }}
             className="relative w-full max-w-3xl bg-card rounded-3xl shadow-[0_30px_60px_rgb(0,0,0,0.15)] border border-border/50 overflow-hidden flex flex-col max-h-[80vh]"
           >
             <div className="p-2 border-b border-border/50 flex items-center relative">
               <Search className="absolute left-6 w-6 h-6 text-foreground/40" />
-              <input 
+              <input
                 autoFocus
-                type="text" 
-                placeholder="Search by title, author, or genre..." 
+                type="text"
+                placeholder="Search by title, author, or genre..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-full h-16 pl-16 pr-14 bg-transparent border-none focus:ring-0 text-xl font-serif placeholder:text-foreground/30 outline-none"
@@ -246,11 +254,13 @@ function SearchModal() {
                   <div>
                     <h4 className="font-serif font-bold text-foreground/50 mb-4 uppercase tracking-widest text-xs">Trending Books</h4>
                     <ul className="space-y-3">
-                      {mockProducts.slice(0,3).map(b => (
+                      {mockProducts.slice(0, 3).map(b => (
                         <li key={b.id}>
                           <Link href={`/shop/${b.id}`} onClick={() => setIsSearchOpen(false)} className="flex items-center gap-3 group">
-                             <img src={b.coverImage} className="w-10 aspect-[2/3] object-cover rounded shadow-sm border border-border/50" />
-                             <span className="font-medium group-hover:text-primary transition-colors line-clamp-1">{b.title}</span>
+                            <div className="w-10 aspect-[2/3] rounded overflow-hidden shadow-sm border border-border/50 shrink-0">
+                              <img src={b.coverImage} className="w-full h-full object-cover" />
+                            </div>
+                            <span className="font-medium group-hover:text-primary transition-colors line-clamp-1">{b.title}</span>
                           </Link>
                         </li>
                       ))}
@@ -270,7 +280,9 @@ function SearchModal() {
                   <h4 className="font-serif font-bold text-foreground/50 mb-4 uppercase tracking-widest text-xs">Search Results</h4>
                   {results.map((book) => (
                     <Link key={book.id} href={`/shop/${book.id}`} onClick={() => setIsSearchOpen(false)} className="flex items-start gap-4 group p-3 -mx-3 rounded-xl hover:bg-primary/5 transition-colors">
-                      <img src={book.coverImage} className="w-16 aspect-[2/3] object-cover rounded shadow-sm border border-border/50 group-hover:shadow-md transition-shadow" />
+                      <div className="w-16 aspect-[2/3] rounded overflow-hidden shadow-sm border border-border/50 shrink-0 group-hover:shadow-md transition-shadow">
+                        <img src={book.coverImage} className="w-full h-full object-cover" />
+                      </div>
                       <div>
                         <h5 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1">{book.title}</h5>
                         <p className="text-sm text-foreground/60">{book.author} • {book.genre}</p>
@@ -281,15 +293,15 @@ function SearchModal() {
                 </div>
               ) : (
                 <div className="py-12 text-center flex flex-col items-center">
-                  <div className="w-16 h-16 bg-card border border-border/50 rounded-full flex items-center justify-center mb-4 text-foreground/30"><Search className="w-8 h-8"/></div>
+                  <div className="w-16 h-16 bg-card border border-border/50 rounded-full flex items-center justify-center mb-4 text-foreground/30"><Search className="w-8 h-8" /></div>
                   <p className="text-lg font-serif font-bold mb-2">No results found for "{query}"</p>
                   <p className="text-foreground/50">Try checking your spelling or using more general terms.</p>
                 </div>
               )}
             </div>
-            
+
             <div className="bg-card/50 border-t border-border/50 p-4 text-center text-xs text-foreground/40 font-medium">
-               Press <kbd className="px-2 py-1 bg-background rounded border border-border/50 shadow-sm mx-1 font-sans">ESC</kbd> to close
+              Press <kbd className="px-2 py-1 bg-background rounded border border-border/50 shadow-sm mx-1 font-sans">ESC</kbd> to close
             </div>
           </motion.div>
         </div>

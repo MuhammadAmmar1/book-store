@@ -43,7 +43,7 @@ export function Footer() {
               <li><Link href="/shop" className="hover:text-primary transition-colors">Shop</Link></li>
               <li><Link href="/about" className="hover:text-primary transition-colors">Our Story</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
-              <li><Link href="/blog" className="hover:text-primary transition-colors">Journal</Link></li>
+              {/* <li><Link href="/blog" className="hover:text-primary transition-colors">Journal</Link></li> */}
             </ul>
           </div>
 
@@ -73,7 +73,9 @@ export function Footer() {
         <div className="pt-8 border-t border-background/20 flex flex-col md:flex-row justify-between items-center text-sm text-background/50">
           <p>&copy; {new Date().getFullYear()} Leaf & Lantern. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <span>Crafted with care.</span>
+            <a href="https://ammar-portfolio5.vercel.app" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              Crafted with care by Ammar
+            </a>
           </div>
         </div>
       </div>

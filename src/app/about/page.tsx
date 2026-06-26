@@ -43,13 +43,13 @@ const storyChapters = [
     quote: "We wanted an online bookstore that still felt like someone remembered your favorite shelf.",
     image: "https://images.unsplash.com/photo-1526243741027-444d633d7365?q=80&w=1200&auto=format&fit=crop",
   },
-  {
-    kicker: "Independent by design",
-    title: "Curated shelves, not endless aisles.",
-    text: "Instead of chasing every title on earth, we built collections around mood, craft, usefulness, and wonder. Every recommendation is shaped by readers, editors, teachers, and lifelong wanderers who believe a good book can change the weather inside a day.",
-    quote: "Discovery should feel generous, not overwhelming.",
-    image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop",
-  },
+  // {
+  //   kicker: "Independent by design",
+  //   title: "Curated shelves, not endless aisles.",
+  //   text: "Instead of chasing every title on earth, we built collections around mood, craft, usefulness, and wonder. Every recommendation is shaped by readers, editors, teachers, and lifelong wanderers who believe a good book can change the weather inside a day.",
+  //   quote: "Discovery should feel generous, not overwhelming.",
+  //   image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1200&auto=format&fit=crop",
+  // },
 ];
 
 const values = [

@@ -310,53 +310,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. NEWSLETTER (Refined Glassmorphism) */}
-        <section className="py-40 relative overflow-hidden">
-          {/* Noise and Gradient Background */}
-          <div className="absolute inset-0 bg-background">
-            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-secondary/15 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/4 mix-blend-multiply dark:mix-blend-screen" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] translate-y-1/4 -translate-x-1/4 mix-blend-multiply dark:mix-blend-screen" />
-            <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.015] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-          </div>
 
-          <div className="container mx-auto px-6 md:px-12 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1, ease: luxuryEase }}
-              className="glass-panel relative max-w-4xl mx-auto rounded-[2.5rem] p-12 md:p-24 text-center shadow-[0_20px_60px_rgb(0,0,0,0.05)] overflow-hidden"
-            >
-              {/* Subtle inner glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/5 pointer-events-none" />
-
-              <div className="relative z-10">
-                <h2 className="font-serif text-4xl md:text-5xl font-bold mb-8 text-foreground tracking-tight">
-                  Receive Stories Worth Reading
-                </h2>
-                <p className="text-foreground/70 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-                  Join our newsletter for exclusive author interviews, weekly book recommendations, and early access to signed editions.
-                </p>
-
-                <form className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3">
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    aria-label="Email Address for Newsletter"
-                    className="flex-1 h-14 px-6 rounded-full border border-border/50 bg-background/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-inner"
-                    required
-                  />
-                  <Button type="submit" size="lg" className="h-14 px-8 shrink-0 rounded-full">
-                    Subscribe
-                  </Button>
-                </form>
-                <p className="text-sm text-foreground/40 mt-6 font-medium">
-                  We respect your inbox. Unsubscribe at any time.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
 
       </main>
 

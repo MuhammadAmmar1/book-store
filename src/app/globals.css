@@ -96,7 +96,7 @@ body {
 
 /* Skip to content link (accessibility) */
 .skip-link {
-  position: absolute;
+  position: fixed;
   top: -100%;
   left: 1rem;
   z-index: 9999;
@@ -107,9 +107,11 @@ body {
   font-size: 0.875rem;
   font-weight: 600;
   transition: top 0.15s;
+  opacity: 0;
 }
 .skip-link:focus {
   top: 0;
+  opacity: 1;
 }
 
 /* =============================================

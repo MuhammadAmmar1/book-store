@@ -10,6 +10,7 @@ export interface CartItem extends Book {
 interface StoreContextType {
   cart: CartItem[];
   wishlist: Book[];
+  lastPurchased: CartItem[];
   isCartOpen: boolean;
   isSearchOpen: boolean;
   addToCart: (book: Book, quantity?: number) => void;
@@ -39,6 +40,7 @@ const getSavedItems = <T,>(key: string): T[] => {
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => getSavedItems<CartItem>("leafAndLanternCart"));
   const [wishlist, setWishlist] = useState<Book[]>(() => getSavedItems<Book>("leafAndLanternWishlist"));
+  const [lastPurchased, setLastPurchased] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -73,7 +75,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearCart = () => {
-    setCart([]);
+    setCart((prev) => {
+      setLastPurchased(prev);
+      return [];
+    });
     setIsCartOpen(false);
   };
 
@@ -92,6 +97,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       value={{
         cart,
         wishlist,
+        lastPurchased,
         isCartOpen,
         isSearchOpen,
         addToCart,
