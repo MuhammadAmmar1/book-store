@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Search, ShoppingBag, Heart, Menu, X, Moon, Sun, Plus, Minus, Trash2 } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@teispace/next-themes";
 import { cn } from "@/utils/cn";
 import { useStore } from "@/store/StoreContext";
 import { mockProducts } from "@/data/mockProducts";
