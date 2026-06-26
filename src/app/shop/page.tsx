@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,6 +42,31 @@ const getCategoryFromParam = (categoryParam: string | null) => {
 };
 
 export default function ShopPage() {
+  return (
+    <Suspense fallback={<ShopFallback />}>
+      <ShopPageContent />
+    </Suspense>
+  );
+}
+
+function ShopFallback() {
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <Navbar />
+      <main className="pt-24">
+        <section className="relative py-20 lg:py-28 overflow-hidden bg-card/40 dark:bg-card/10 border-b border-border">
+          <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-foreground/60">Loading shop...</p>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function ShopPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState("");
