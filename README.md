@@ -4,6 +4,8 @@
 
 A production-quality, full-featured online bookstore built as a frontend portfolio project. Leaf & Lantern blends editorial design, premium micro-interactions, and a seamless shopping experience — crafted to feel handmade, not AI-generated.
 
+🔗 **Live Demo:** [leaf-lentern.vercel.app](https://leaf-lentern.vercel.app)
+
 ---
 
 ## ✨ Features
@@ -14,6 +16,10 @@ A production-quality, full-featured online bookstore built as a frontend portfol
 - **Persistent Cart** — Add, remove, and update quantities; saved to `localStorage`
 - **Wishlist** — Save books for later with an animated heart toggle
 - **Coupon Codes** — Apply `READ10` for 10% off
+
+### 📖 Free Online Reader
+- **Reader Mode** — Immersive reading experience with customizable font size, dark mode toggle, and progress tracking
+- **Sample Chapters** — Read selected book excerpts directly in the browser
 
 ### 🛒 Checkout & Orders
 - **Multi-step Checkout** — Shipping → Payment → Confirmation flow with step persistence via `sessionStorage`
@@ -53,12 +59,12 @@ A production-quality, full-featured online bookstore built as a frontend portfol
 
 | Technology | Purpose |
 |---|---|
-| **Next.js 15** (App Router) | React framework with file-based routing |
+| **Next.js 16** (App Router) | React framework with file-based routing |
 | **TypeScript** | Type safety throughout |
 | **Tailwind CSS v4** | Utility-first styling with CSS custom properties |
 | **Framer Motion** | Page transitions, scroll reveals, micro-animations |
 | **Lucide React** | Consistent, accessible icon set |
-| **next-themes** | System-aware dark mode |
+| **@teispace/next-themes** | System-aware dark mode |
 
 ---
 
@@ -99,13 +105,23 @@ npm start
 src/
 ├── app/                    # Next.js App Router pages
 │   ├── about/              # About page
+│   │   └── layout.tsx      # About page metadata layout
 │   ├── cart/               # Shopping cart
 │   ├── checkout/           # Multi-step checkout flow
 │   ├── contact/            # Contact form
+│   ├── faq/                # FAQ page
+│   ├── privacy/            # Privacy policy
+│   ├── read/               # Free online reader
+│   │   └── [id]/           # Dynamic reader pages
+│   ├── shipping/           # Shipping policy
 │   ├── shop/               # Book catalog
 │   │   └── [id]/           # Dynamic product detail pages
+│   ├── terms/              # Terms of service
 │   ├── track/              # Order tracking
 │   ├── wishlist/           # Saved books
+│   ├── favicon.ico         # Legacy favicon
+│   ├── globals.css         # Tailwind v4 + design tokens
+│   ├── icon.svg            # SVG favicon
 │   ├── layout.tsx          # Root layout (SEO, global providers)
 │   ├── not-found.tsx       # 404 page
 │   ├── page.tsx            # Homepage
@@ -117,7 +133,8 @@ src/
 │   │   ├── Navbar.tsx      # Site navigation with cart/wishlist/search
 │   │   └── Footer.tsx      # Site footer with links
 │   ├── providers/
-│   │   ├── ThemeProvider.tsx    # next-themes wrapper
+│   │   ├── Hydration.tsx        # SSR-safe mount guard
+│   │   ├── ThemeProvider.tsx    # @teispace/next-themes wrapper
 │   │   └── PageTransition.tsx   # Framer Motion page transitions
 │   └── ui/
 │       ├── BackToTop.tsx        # Floating back-to-top button
@@ -156,7 +173,7 @@ src/
 | Route | Description |
 |---|---|
 | `/` | Homepage — Hero, Best Sellers, Categories, Newsletter |
-| `/shop` | Catalog with search, category filters, grid/list toggle |
+| `/shop` | Catalog with search, genre filters, grid/list toggle |
 | `/shop/[id]` | Product detail — images, description, add to cart, wishlist |
 | `/cart` | Cart with quantity controls, coupon, and order summary |
 | `/wishlist` | Saved books |
@@ -164,6 +181,11 @@ src/
 | `/track` | Order tracking with animated timeline |
 | `/about` | Brand story and team |
 | `/contact` | Contact form |
+| `/faq` | FAQ accordion with categorized questions |
+| `/privacy` | Privacy policy |
+| `/terms` | Terms of service |
+| `/shipping` | Shipping policy, rates, and delivery times |
+| `/read/[id]` | Free online reader with dark mode and font controls |
 
 ---
 
@@ -188,11 +210,9 @@ MIT License — free to use for personal and commercial projects.
 
 ## 👤 Author
 
-Built with ❤️ as a frontend portfolio project.
-Designed to demonstrate production-quality React/Next.js development.
+Built by **Muhammad Ammar** — Full Stack Developer.
+[View Portfolio](https://ammar-portfolio5.vercel.app)
 
-## Deploy on Vercel
+## 🌐 Live Site
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The project is deployed on Vercel at **[leaf-lentern.vercel.app](https://leaf-lentern.vercel.app)**.
