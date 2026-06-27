@@ -443,8 +443,8 @@ export default function Home() {
                 />
               </div>
               <div className="hidden lg:flex items-center justify-center">
-                <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl">
-                  <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=800&auto=format&fit=crop" alt="Beautiful library interior with bookshelves" className="object-cover w-full h-full" />
+                <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl">
+                  <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=800&auto=format&fit=crop" alt="Beautiful library interior with bookshelves" className="aspect-[3/4] w-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
               </div>
