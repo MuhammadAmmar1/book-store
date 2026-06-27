@@ -106,7 +106,7 @@ function ShopPageContent() {
       <main className="pt-24">
         {/* 1. PAGE HEADER */}
         <section className="relative py-20 lg:py-28 overflow-hidden bg-card/40 dark:bg-card/10 border-b border-border">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] dark:opacity-[0.015]" />
+          <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03] dark:opacity-[0.015]" />
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
           
           <div className="container mx-auto px-6 md:px-12 relative z-10 text-center">
@@ -441,7 +441,7 @@ function ShopPageContent() {
               </button>
               
               <div className="md:w-2/5 shrink-0 bg-secondary/5 p-8 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03]" />
                 <div className="w-full max-w-[240px] aspect-[2/3] rounded-xl overflow-hidden shadow-2xl relative z-10">
                   <img src={selectedBook.coverImage} alt={selectedBook.title} className="w-full h-full object-cover" />
                 </div>

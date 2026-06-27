@@ -255,7 +255,7 @@ function PrivacyAtmosphere() {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(30,58,95,0.15),transparent_34%),radial-gradient(circle_at_75%_20%,rgba(212,163,115,0.12),transparent_32%),radial-gradient(circle_at_50%_80%,rgba(107,142,110,0.10),transparent_36%)]" />
-      <div className="absolute inset-0 opacity-[0.035] dark:opacity-[0.018] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      <div className="absolute inset-0 opacity-[0.035] dark:opacity-[0.018] bg-[url('/noise.svg')]" />
       {Array.from({ length: 10 }).map((_, index) => (
         <motion.span
           key={index}
