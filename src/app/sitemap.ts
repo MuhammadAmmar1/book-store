@@ -22,5 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...productRoutes];
+  const readRoutes: MetadataRoute.Sitemap = ["book-010", "book-005"].map((id) => ({
+    url: `${base}/read/${id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...productRoutes, ...readRoutes];
 }

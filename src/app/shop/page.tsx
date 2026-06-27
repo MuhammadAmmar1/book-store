@@ -312,7 +312,8 @@ function ShopPageContent() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.5, ease: luxuryEase }}
-                        className={cn("group flex", view === "grid" ? "flex-col" : "flex-row gap-8 items-center bg-card/40 p-6 rounded-3xl border border-border/30 hover:border-border/80 transition-colors")}
+                        onClick={() => router.push(`/shop/${book.id}`)}
+                        className={cn("group flex cursor-pointer", view === "grid" ? "flex-col" : "flex-row gap-8 items-center bg-card/40 p-6 rounded-3xl border border-border/30 hover:border-border/80 transition-colors")}
                       >
                         <div className={cn(
                           "relative rounded-2xl overflow-hidden shadow-sm group-hover:shadow-xl transition-all duration-700 border border-border/40 shrink-0",

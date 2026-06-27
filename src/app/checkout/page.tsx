@@ -11,12 +11,16 @@ import {
   ChevronRight,
   CheckCircle,
   ArrowLeft,
-  Package
+  Package,
+  Gift
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useStore } from "@/store/StoreContext";
+import { mockProducts } from "@/data/mockProducts";
+
+
 
 const luxuryEase = [0.22, 1, 0.36, 1];
 
@@ -35,30 +39,51 @@ const fadeUp = {
 
 export default function CheckoutPage() {
   const { cart, cartTotal, lastPurchased, clearCart } = useStore();
+  const [mounted, setMounted] = React.useState(false);
   const [orderTotals, setOrderTotals] = React.useState<{ subtotal: number; tax: number; shipping: number; total: number } | null>(null);
   const tax = cartTotal * 0.08;
 
   const [toastMessage, setToastMessage] = React.useState<{ type: "error" | "success", text: string } | null>(null);
-  const [currentStep, setCurrentStepState] = React.useState<number>(() => {
-    if (typeof window !== "undefined") {
-      return Number(sessionStorage.getItem("checkoutStep") || 1);
-    }
-    return 1;
-  });
-  const [orderId, setOrderIdState] = React.useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("checkoutOrderId") || "";
-    }
-    return "";
-  });
+  const [currentStep, setCurrentStepState] = React.useState<number>(1);
+  const [orderId, setOrderIdState] = React.useState<string>("");
   
   // Shipping method selection state persisted in sessionStorage
-  const [selectedShipping, setSelectedShipping] = React.useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("checkoutShipping") || "Standard Delivery";
-    }
-    return "Standard Delivery";
-  });
+  const [selectedShipping, setSelectedShipping] = React.useState<string>("Standard Delivery");
+
+  // Form state persisted in sessionStorage across step transitions
+  const [shippingForm, setShippingForm] = React.useState<Record<string, string>>({});
+  const [paymentForm, setPaymentForm] = React.useState<Record<string, string>>({});
+
+  // Restore sessionStorage state after mount to avoid hydration mismatches
+  React.useEffect(() => {
+    setMounted(true);
+    const step = Number(sessionStorage.getItem("checkoutStep") || 1);
+    if (step !== 1) setCurrentStepState(step);
+    const id = sessionStorage.getItem("checkoutOrderId") || "";
+    if (id) setOrderIdState(id);
+    const shipping = sessionStorage.getItem("checkoutShipping");
+    if (shipping) setSelectedShipping(shipping);
+    const savedShipping = sessionStorage.getItem("checkoutShippingForm");
+    if (savedShipping) setShippingForm(JSON.parse(savedShipping));
+    const savedPayment = sessionStorage.getItem("checkoutPaymentForm");
+    if (savedPayment) setPaymentForm(JSON.parse(savedPayment));
+  }, []);
+
+  const updateShippingField = (label: string, value: string) => {
+    setShippingForm(prev => {
+      const next = { ...prev, [label]: value };
+      sessionStorage.setItem("checkoutShippingForm", JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const updatePaymentField = (label: string, value: string) => {
+    setPaymentForm(prev => {
+      const next = { ...prev, [label]: value };
+      sessionStorage.setItem("checkoutPaymentForm", JSON.stringify(next));
+      return next;
+    });
+  };
 
   // Compute shipping cost based on selected method
   const shippingCostMap: Record<string, number> = {
@@ -83,6 +108,10 @@ export default function CheckoutPage() {
     localStorage.setItem("ll_orders", JSON.stringify(orders.slice(0, 10)));
   };
 
+  const giftBooks = React.useMemo(() =>
+    mockProducts.filter(b => b.id === "book-001" || b.id === "book-008").map(b => ({ ...b, quantity: 1 })),
+  []);
+
   const showToast = (type: "error" | "success", text: string) => {
     setToastMessage({ type, text });
     setTimeout(() => setToastMessage(null), 3000);
@@ -102,6 +131,7 @@ export default function CheckoutPage() {
       const newOrderId = "LNL-" + Math.floor(1000 + Math.random() * 9000);
       setOrderId(newOrderId);
       setOrderTotals({ subtotal: cartTotal, tax, shipping, total: finalTotal });
+      localStorage.setItem("checkoutGiftBooks_" + newOrderId, JSON.stringify(giftBooks));
       clearCart();
       setCurrentStep(3);
       showToast("success", "Order placed successfully! Thank you for your purchase.");
@@ -143,139 +173,150 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        <motion.form
+        <form
           onSubmit={handleCheckout}
-          variants={staggerContainer} initial="hidden" animate="visible"
           className="grid grid-cols-1 lg:grid-cols-3 gap-10"
         >
-          {/* LEFT: Checkout Form UI */}
-          <div className="lg:col-span-2 space-y-8">
-            <AnimatePresence mode="wait">
-              {currentStep === 1 && (
-                <motion.div key="step1" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
-                  {/* Shipping Address */}
-                  <motion.section variants={fadeUp} className="bg-card/40 border border-border/50 rounded-3xl p-8">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <MapPin className="w-5 h-5 text-primary" />
-                        </div>
-                        <h2 className="font-serif text-xl font-bold">Shipping Address</h2>
-                      </div>
-                      <button className="text-sm font-medium text-primary hover:underline">Edit</button>
+          {/* LEFT: Checkout Form UI - all steps kept in DOM to preserve input state */}
+          <div className="lg:col-span-2 space-y-8 relative">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={currentStep === 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20, position: "absolute", inset: 0, pointerEvents: "none" }}
+              transition={{ duration: 0.3 }}
+              className={currentStep === 1 ? "" : "invisible"}
+            >
+              {/* Shipping Address */}
+              <motion.section variants={fadeUp} className="bg-card/40 border border-border/50 rounded-3xl p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-primary" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[
-                        { label: "First Name", placeholder: "John", width: 1 },
-                        { label: "Last Name", placeholder: "Doe", width: 1 },
-                        { label: "Email Address", placeholder: "john@example.com", width: 2 },
-                        { label: "Phone Number", placeholder: "+1 (555) 000-0000", width: 1 },
-                        { label: "Country", placeholder: "United States", width: 1 },
-                        { label: "Street Address", placeholder: "123 Library Lane", width: 2 },
-                        { label: "City", placeholder: "New York", width: 1 },
-                        { label: "Zip Code", placeholder: "10001", width: 1 },
-                      ].map((field) => (
-                        <div key={field.label} className={field.width === 2 ? "sm:col-span-2" : ""}>
-                          <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">{field.label}</label>
-                          <input
-                            required
-                            type="text"
-                            placeholder={field.placeholder}
-                            className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30"
-                          />
-                        </div>
-                      ))}
+                    <h2 className="font-serif text-xl font-bold">Shipping Address</h2>
+                  </div>
+                  <button className="text-sm font-medium text-primary hover:underline">Edit</button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { label: "First Name", placeholder: "John", width: 1 },
+                    { label: "Last Name", placeholder: "Doe", width: 1 },
+                    { label: "Email Address", placeholder: "john@example.com", width: 2 },
+                    { label: "Phone Number", placeholder: "+1 (555) 000-0000", width: 1 },
+                    { label: "Country", placeholder: "United States", width: 1 },
+                    { label: "Street Address", placeholder: "123 Library Lane", width: 2 },
+                    { label: "City", placeholder: "New York", width: 1 },
+                    { label: "Zip Code", placeholder: "10001", width: 1 },
+                  ].map((field) => (
+                    <div key={field.label} className={field.width === 2 ? "sm:col-span-2" : ""}>
+                      <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">{field.label}</label>
+                      <input
+                        required
+                        type="text"
+                        value={shippingForm[field.label] || ""}
+                        onChange={(e) => updateShippingField(field.label, e.target.value)}
+                        disabled={currentStep !== 1}
+                        placeholder={field.placeholder}
+                        className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30 disabled:opacity-50"
+                      />
                     </div>
-                  </motion.section>
+                  ))}
+                </div>
+              </motion.section>
 
-                  {/* Delivery Method */}
-                  <motion.section variants={fadeUp} className="bg-card/40 border border-border/50 rounded-3xl p-8">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Truck className="w-5 h-5 text-primary" />
-                      </div>
-                      <h2 className="font-serif text-xl font-bold">Delivery Method</h2>
-                    </div>
-                    <div className="space-y-3">
-                      {[
-                        { name: "Standard Delivery", time: "3–5 business days", price: "Free", selected: selectedShipping === "Standard Delivery" },
-                        { name: "Express Delivery", time: "1–2 business days", price: "$12.00", selected: selectedShipping === "Express Delivery" },
-                        { name: "Priority Overnight", time: "Next business day", price: "$24.00", selected: selectedShipping === "Priority Overnight" },
-                      ].map((method) => (
-                        <label 
-                          key={method.name} 
-                          onClick={() => {
-                            setSelectedShipping(method.name);
-                            sessionStorage.setItem("checkoutShipping", method.name);
-                          }}
-                          className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-all ${method.selected ? "border-primary bg-primary/5" : "border-border/50 hover:border-border"}`}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${method.selected ? "border-primary" : "border-border"}`}>
-                              {method.selected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                            </div>
-                            <div>
-                              <p className="font-semibold">{method.name}</p>
-                              <p className="text-sm text-foreground/60">{method.time}</p>
-                            </div>
-                          </div>
-                          <span className={`font-bold ${method.price === "Free" ? "text-primary" : ""}`}>{method.price}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </motion.section>
-                </motion.div>
-              )}
-
-              {currentStep === 2 && (
-                <motion.div key="step2" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="space-y-8">
-                  {/* Payment Method */}
-                  <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-card/40 border border-border/50 rounded-3xl p-8">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <CreditCard className="w-5 h-5 text-primary" />
-                      </div>
-                      <h2 className="font-serif text-xl font-bold">Payment Method</h2>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="sm:col-span-2">
-                          <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">Card Number</label>
-                          <input required type="text" placeholder="•••• •••• •••• ••••" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30" />
+              {/* Delivery Method */}
+              <motion.section variants={fadeUp} className="bg-card/40 border border-border/50 rounded-3xl p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Truck className="w-5 h-5 text-primary" />
+                  </div>
+                  <h2 className="font-serif text-xl font-bold">Delivery Method</h2>
+                </div>
+                <div className="space-y-3">
+                  {[
+                    { name: "Standard Delivery", time: "3–5 business days", price: "Free", selected: selectedShipping === "Standard Delivery" },
+                    { name: "Express Delivery", time: "1–2 business days", price: "$12.00", selected: selectedShipping === "Express Delivery" },
+                    { name: "Priority Overnight", time: "Next business day", price: "$24.00", selected: selectedShipping === "Priority Overnight" },
+                  ].map((method) => (
+                    <label 
+                      key={method.name} 
+                      onClick={() => {
+                        setSelectedShipping(method.name);
+                        sessionStorage.setItem("checkoutShipping", method.name);
+                      }}
+                      className={`flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-all ${method.selected ? "border-primary bg-primary/5" : "border-border/50 hover:border-border"}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${method.selected ? "border-primary" : "border-border"}`}>
+                          {method.selected && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">Expiry Date</label>
-                          <input required type="text" placeholder="MM / YY" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30" />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">CVV</label>
-                          <input required type="text" placeholder="•••" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30" />
+                          <p className="font-semibold">{method.name}</p>
+                          <p className="text-sm text-foreground/60">{method.time}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 mt-4 p-3 bg-primary/5 rounded-xl border border-primary/20">
-                        <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                        <p className="text-xs text-foreground/70">Your payment information is encrypted with 256-bit SSL security. We never store card details.</p>
-                      </div>
-                    </div>
-                  </motion.section>
-                </motion.div>
-              )}
+                      <span className={`font-bold ${method.price === "Free" ? "text-primary" : ""}`}>{method.price}</span>
+                    </label>
+                  ))}
+                </div>
+              </motion.section>
+            </motion.div>
 
-              {currentStep === 3 && (
-                <motion.section key="step3" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-card/40 border border-border/50 rounded-3xl p-12 text-center flex flex-col items-center">
-                  <CheckCircle className="w-16 h-16 text-primary mb-6" />
-                  <h2 className="font-serif text-3xl font-bold mb-4">Order Confirmed!</h2>
-                  <p className="text-foreground/60 mb-8 max-w-md">Thank you for your purchase. Your order <span className="font-bold text-foreground">{orderId}</span> has been placed and is being processed.</p>
-                  <Link href="/track">
-                    <Button size="lg" className="rounded-2xl h-14 shadow-lg hover:-translate-y-1 transition-transform px-8">Track Your Order</Button>
-                  </Link>
-                </motion.section>
-              )}
-            </AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={currentStep === 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: 20, position: "absolute", inset: 0, pointerEvents: "none" }}
+              transition={{ duration: 0.3 }}
+              className={currentStep === 2 ? "" : "invisible"}
+            >
+              {/* Payment Method */}
+              <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-card/40 border border-border/50 rounded-3xl p-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-primary" />
+                  </div>
+                  <h2 className="font-serif text-xl font-bold">Payment Method</h2>
+                </div>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">Card Number</label>
+                      <input required type="text" value={paymentForm["Card Number"] || ""} onChange={(e) => updatePaymentField("Card Number", e.target.value)} disabled={currentStep !== 2} placeholder="•••• •••• •••• ••••" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30 disabled:opacity-50" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">Expiry Date</label>
+                      <input required type="text" value={paymentForm["Expiry Date"] || ""} onChange={(e) => updatePaymentField("Expiry Date", e.target.value)} disabled={currentStep !== 2} placeholder="MM / YY" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30 disabled:opacity-50" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-foreground/50 uppercase tracking-widest mb-2">CVV</label>
+                      <input required type="text" value={paymentForm["CVV"] || ""} onChange={(e) => updatePaymentField("CVV", e.target.value)} disabled={currentStep !== 2} placeholder="•••" className="w-full h-12 px-4 bg-background border border-border/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow placeholder:text-foreground/30 disabled:opacity-50" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 mt-4 p-3 bg-primary/5 rounded-xl border border-primary/20">
+                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                    <p className="text-xs text-foreground/70">Your payment information is encrypted with 256-bit SSL security. We never store card details.</p>
+                  </div>
+                </div>
+              </motion.section>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={currentStep === 3 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95, position: "absolute", inset: 0, pointerEvents: "none" }}
+              transition={{ duration: 0.3 }}
+              className={currentStep === 3 ? "" : "invisible"}
+            >
+              <section className="bg-card/40 border border-border/50 rounded-3xl p-12 text-center flex flex-col items-center">
+                <CheckCircle className="w-16 h-16 text-primary mb-6" />
+                <h2 className="font-serif text-3xl font-bold mb-4">Order Confirmed!</h2>
+                <p className="text-foreground/60 mb-8 max-w-md">Thank you for your purchase. Your order <span className="font-bold text-foreground">{orderId}</span> has been placed and is being processed.</p>
+                <Link href="/track">
+                  <Button size="lg" className="rounded-2xl h-14 shadow-lg hover:-translate-y-1 transition-transform px-8">Track Your Order</Button>
+                </Link>
+              </section>
+            </motion.div>
           </div>
 
           {/* RIGHT: Order Summary */}
-          <motion.div variants={fadeUp} className="lg:col-span-1">
+          <div className="lg:col-span-1">
             <div className="bg-card/40 border border-border/50 rounded-3xl p-8 sticky top-32">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
@@ -286,7 +327,9 @@ export default function CheckoutPage() {
 
               {/* Items */}
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto pr-1">
-                {(currentStep === 3 ? lastPurchased : cart).length === 0 ? (
+                {!mounted ? (
+                  <p className="text-foreground/50 text-sm text-center py-4">No items in cart.</p>
+                ) : (currentStep === 3 ? lastPurchased : cart).length === 0 ? (
                   <p className="text-foreground/50 text-sm text-center py-4">No items in cart.</p>
                 ) : (currentStep === 3 ? lastPurchased : cart).map((item) => (
                   <div key={item.id} className="flex gap-3">
@@ -302,15 +345,40 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
+              {/* Free Gift */}
+              {mounted && (
+                <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-2xl">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Gift className="w-4 h-4 text-primary" />
+                    <span className="text-xs font-bold text-primary uppercase tracking-widest">Free Gift</span>
+                  </div>
+                  <p className="text-xs text-foreground/70 mb-3">Enjoy two free books with your purchase!</p>
+                  <div className="space-y-2">
+                    {giftBooks.map((book) => (
+                      <div key={book.id} className="flex gap-2 items-center">
+                        <div className="w-8 aspect-[2/3] rounded overflow-hidden border border-border/50 shrink-0">
+                          <img src={book.coverImage} className="w-full h-full object-cover" alt={book.title} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold line-clamp-1">{book.title}</p>
+                          <p className="text-[10px] text-foreground/50">{book.author}</p>
+                        </div>
+                        <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">FREE</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3 border-y border-border/50 py-5 mb-5 text-sm">
-                <div className="flex justify-between"><span className="text-foreground/60">Subtotal</span><span className="font-medium">${(orderTotals ? orderTotals.subtotal : cartTotal).toFixed(2)}</span></div>
-                <div className="flex justify-between"><span className="text-foreground/60">Shipping</span><span className="font-medium">{orderTotals ? (orderTotals.shipping === 0 ? "Free" : `$${orderTotals.shipping.toFixed(2)}`) : (shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`)}</span></div>
-                <div className="flex justify-between"><span className="text-foreground/60">Tax (8%)</span><span className="font-medium">${(orderTotals ? orderTotals.tax : tax).toFixed(2)}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Subtotal</span><span className="font-medium">${!mounted ? "0.00" : (orderTotals ? orderTotals.subtotal : cartTotal).toFixed(2)}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Shipping</span><span className="font-medium">{!mounted ? "Free" : (orderTotals ? (orderTotals.shipping === 0 ? "Free" : `$${orderTotals.shipping.toFixed(2)}`) : (shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`))}</span></div>
+                <div className="flex justify-between"><span className="text-foreground/60">Tax (8%)</span><span className="font-medium">${!mounted ? "0.00" : (orderTotals ? orderTotals.tax : tax).toFixed(2)}</span></div>
               </div>
 
               <div className="flex justify-between items-end mb-8">
                 <span className="font-serif text-lg font-bold text-foreground/60">Total</span>
-                <span className="font-sans text-3xl font-bold">${(orderTotals ? orderTotals.total : finalTotal).toFixed(2)}</span>
+                <span className="font-sans text-3xl font-bold">${!mounted ? "0.00" : (orderTotals ? orderTotals.total : finalTotal).toFixed(2)}</span>
               </div>
 
               {currentStep < 3 && (
@@ -324,8 +392,8 @@ export default function CheckoutPage() {
                 </>
               )}
             </div>
-          </motion.div>
-        </motion.form>
+          </div>
+        </form>
       </main>
 
       {/* Toast Notification */}

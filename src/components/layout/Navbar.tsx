@@ -89,11 +89,13 @@ export function Navbar() {
             </Link>
             <button onClick={() => setIsCartOpen(true)} className="text-foreground/80 hover:text-primary transition-colors relative hover:scale-110 active:scale-95">
               <ShoppingBag className="w-5 h-5" />
-              {cart.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
-                </span>
-              )}
+              <Hydration>
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-secondary text-secondary-foreground text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                    {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                  </span>
+                )}
+              </Hydration>
             </button>
             <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="text-foreground/80 hover:text-primary transition-colors hover:scale-110 active:scale-95">
               {mounted ? (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />) : null}
@@ -154,16 +156,20 @@ export function Navbar() {
                   </button>
                   <Link href="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors relative">
                     <Heart className="w-5 h-5" />
-                    {wishlist.length > 0 && (
-                      <span className="absolute -top-1 -right-3 bg-primary text-primary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center">{wishlist.length}</span>
-                    )}
+                    <Hydration>
+                      {wishlist.length > 0 && (
+                        <span className="absolute -top-1 -right-3 bg-primary text-primary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center">{wishlist.length}</span>
+                      )}
+                    </Hydration>
                     <span className="text-[10px] font-medium uppercase tracking-widest">Wishlist</span>
                   </Link>
                   <button onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(true); }} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors relative">
                     <ShoppingBag className="w-5 h-5" />
-                    {cart.length > 0 && (
-                      <span className="absolute -top-1 -right-3 bg-secondary text-secondary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
-                    )}
+                    <Hydration>
+                      {cart.length > 0 && (
+                        <span className="absolute -top-1 -right-3 bg-secondary text-secondary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
+                      )}
+                    </Hydration>
                     <span className="text-[10px] font-medium uppercase tracking-widest">Cart</span>
                   </button>
                   <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="flex flex-col items-center gap-1 text-foreground/70 hover:text-primary transition-colors">

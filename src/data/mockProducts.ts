@@ -7,6 +7,7 @@ export interface Book {
   rating: number;
   reviewsCount: number;
   coverImage: string;
+  authorImage?: string;
   shortDescription: string;
   fullDescription: string;
   publisher: string;
@@ -39,6 +40,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0525559474",
     pages: 304,
+    authorImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
     badges: ["Best Seller", "Editor's Pick"],
     tags: ["contemporary", "fantasy", "philosophical"]
   },
@@ -60,6 +62,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0735211292",
     pages: 320,
+    authorImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop",
     badges: ["Best Seller"],
     tags: ["productivity", "psychology", "self-help"]
   },
@@ -81,6 +84,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0441172719",
     pages: 412,
+    authorImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop",
     badges: ["Award Winner"],
     tags: ["classic", "space opera", "politics"]
   },
@@ -102,6 +106,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0132350884",
     pages: 464,
+    authorImage: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop",
     tags: ["software engineering", "coding", "agile"]
   },
   {
@@ -122,6 +127,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-3150096765",
     pages: 256,
+    authorImage: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?q=80&w=400&auto=format&fit=crop",
     tags: ["classic", "absurdist", "philosophical"]
   },
   {
@@ -142,6 +148,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0062316097",
     pages: 464,
+    authorImage: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=400&auto=format&fit=crop",
     badges: ["Best Seller"],
     tags: ["anthropology", "science", "humanity"]
   },
@@ -163,6 +170,7 @@ export const mockProducts: Book[] = [
     availability: "Out of Stock",
     isbn: "978-1250301697",
     pages: 336,
+    authorImage: "https://images.unsplash.com/photo-1507591064344-4c6cf005b990?q=80&w=400&auto=format&fit=crop",
     tags: ["thriller", "psychological", "crime"]
   },
   {
@@ -183,6 +191,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-1449474256",
     pages: 208,
+    authorImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop",
     badges: ["Award Winner"],
     tags: ["feminism", "healing", "modern poetry"]
   },
@@ -204,6 +213,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-0307887894",
     pages: 336,
+    authorImage: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400&auto=format&fit=crop",
     tags: ["entrepreneurship", "management", "innovation"]
   },
   {
@@ -224,6 +234,7 @@ export const mockProducts: Book[] = [
     availability: "Pre Order",
     isbn: "978-0156012088",
     pages: 96,
+    authorImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
     badges: ["Limited Edition"],
     tags: ["classic", "fable", "philosophy"]
   },
@@ -245,6 +256,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-9693504176",
     pages: 120,
+    authorImage: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
     tags: ["urdu literature", "philosophy", "spirituality"]
   },
   {
@@ -265,6 +277,7 @@ export const mockProducts: Book[] = [
     availability: "In Stock",
     isbn: "978-1451648539",
     pages: 656,
+    authorImage: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop",
     tags: ["technology", "business", "history"]
   }
 ];

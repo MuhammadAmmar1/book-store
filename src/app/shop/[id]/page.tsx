@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
-import { 
+import {
   ChevronRight, 
   Heart, 
   Share2, 
@@ -16,7 +16,8 @@ import {
   BookOpen,
   Leaf,
   ThumbsUp,
-  Eye
+  Eye,
+  Gift
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layout/Navbar";
@@ -29,8 +30,10 @@ const luxuryEase = [0.22, 1, 0.36, 1];
 
 export default function ProductDetailsPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const bookId = params?.id as string;
   const book = mockProducts.find((b) => b.id === bookId) || mockProducts[0];
+  const isFree = searchParams.get("free") === "true";
   
   const relatedBooks = mockProducts.filter(b => b.id !== bookId && b.genre === book.genre).slice(0, 4);
   if (relatedBooks.length < 4) {
@@ -41,6 +44,7 @@ export default function ProductDetailsPage() {
   const [activeTab, setActiveTab] = React.useState("Overview");
   const [isStickyVisible, setIsStickyVisible] = React.useState(false);
   const purchasePanelRef = React.useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const { cart, addToCart, toggleWishlist, wishlist } = useStore();
   const isWishlisted = wishlist.some(w => w.id === book.id);
   const cartItem = cart.find(item => item.id === book.id);
@@ -132,7 +136,11 @@ export default function ProductDetailsPage() {
                     animate={{ x: mousePosition.x * 100 + "%", y: mousePosition.y * 100 + "%" }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   />
-                  {book.badges && book.badges[0] && (
+                  {isFree ? (
+                    <span className="absolute top-6 left-6 z-20 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg flex items-center gap-1.5">
+                      <Gift className="w-3.5 h-3.5" /> FREE
+                    </span>
+                  ) : book.badges && book.badges[0] && (
                     <span className="absolute top-6 left-6 z-20 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
                       {book.badges[0]}
                     </span>
@@ -169,7 +177,15 @@ export default function ProductDetailsPage() {
                   <span className="text-foreground/50">({book.reviewsCount.toLocaleString()} reviews)</span>
                 </div>
 
-                <div className="text-4xl font-sans font-bold mb-8">${book.price.toFixed(2)}</div>
+                {isFree ? (
+                  <div className="flex items-center gap-3 mb-8">
+                    <span className="text-4xl font-sans font-bold text-primary">FREE</span>
+                    <span className="text-lg text-foreground/40 line-through">${book.price.toFixed(2)}</span>
+                    <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Free Gift</span>
+                  </div>
+                ) : (
+                  <div className="text-4xl font-sans font-bold mb-8">${book.price.toFixed(2)}</div>
+                )}
                 
                 <p className="text-lg text-foreground/80 leading-relaxed mb-10 font-light">
                   {book.shortDescription}
@@ -177,20 +193,38 @@ export default function ProductDetailsPage() {
 
                 {/* Purchase Panel */}
                 <div ref={purchasePanelRef} className="space-y-4 mb-10">
-                  <div className="flex gap-4">
-                    <Button onClick={() => addToCart(book)} size="lg" className={cn("flex-1 h-16 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1", isInCart && "bg-secondary hover:bg-secondary/90 text-secondary-foreground")}>
-                      {isInCart ? `Added to Cart (${cartQuantity})` : "Add to Cart"}
-                    </Button>
-                    <Button onClick={() => toggleWishlist(book)} variant="outline" size="icon" className={cn("h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5 transition-colors", isWishlisted ? "text-red-500 border-red-200" : "")}>
-                      <Heart className={cn("w-6 h-6", isWishlisted && "fill-current")} />
-                    </Button>
-                    <Button onClick={handleShare} variant="outline" size="icon" className="h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5">
-                      <Share2 className="w-6 h-6" />
-                    </Button>
-                  </div>
-                  <Button onClick={() => addToCart(book)} variant="secondary" className="w-full h-14 rounded-2xl text-base font-bold bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors">
-                    Buy Now
-                  </Button>
+                  {isFree ? (
+                    <div className="flex gap-4">
+                      <Link href={`/read/${book.id}`} className="flex-1">
+                        <Button size="lg" className="w-full h-16 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 bg-primary text-primary-foreground">
+                          <BookOpen className="w-5 h-5 mr-2" /> Read Now
+                        </Button>
+                      </Link>
+                      <Button onClick={() => toggleWishlist(book)} variant="outline" size="icon" className={cn("h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5 transition-colors", isWishlisted ? "text-red-500 border-red-200" : "")}>
+                        <Heart className={cn("w-6 h-6", isWishlisted && "fill-current")} />
+                      </Button>
+                      <Button onClick={handleShare} variant="outline" size="icon" className="h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5">
+                        <Share2 className="w-6 h-6" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex gap-4">
+                        <Button onClick={() => addToCart(book)} size="lg" className={cn("flex-1 h-16 text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1", isInCart && "bg-secondary hover:bg-secondary/90 text-secondary-foreground")}>
+                          {isInCart ? `Added to Cart (${cartQuantity})` : "Add to Cart"}
+                        </Button>
+                        <Button onClick={() => toggleWishlist(book)} variant="outline" size="icon" className={cn("h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5 transition-colors", isWishlisted ? "text-red-500 border-red-200" : "")}>
+                          <Heart className={cn("w-6 h-6", isWishlisted && "fill-current")} />
+                        </Button>
+                        <Button onClick={handleShare} variant="outline" size="icon" className="h-16 w-16 rounded-2xl border-border/80 hover:bg-primary/5">
+                          <Share2 className="w-6 h-6" />
+                        </Button>
+                      </div>
+                      <Button onClick={() => addToCart(book)} variant="secondary" className="w-full h-14 rounded-2xl text-base font-bold bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors">
+                        Buy Now
+                      </Button>
+                    </>
+                  )}
                 </div>
 
                 {/* Highlights / Guarantees */}
@@ -369,8 +403,8 @@ export default function ProductDetailsPage() {
           <div className="container mx-auto px-6 md:px-12 relative z-10">
             <div className="flex flex-col md:flex-row items-center gap-12 max-w-5xl mx-auto">
               <div className="md:w-1/3 shrink-0">
-                <div className="relative aspect-square rounded-full overflow-hidden border-8 border-background shadow-xl mx-auto group">
-                   <img src="https://images.unsplash.com/photo-1544717302-de2939b7ef71?q=80&w=800&auto=format&fit=crop" alt="Author" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="relative aspect-square rounded-full overflow-hidden border-2 border-border/20 shadow-xl mx-auto group bg-muted">
+                   <img src={book.authorImage || "https://images.unsplash.com/photo-1544717302-de2939b7ef71?q=80&w=400&auto=format&fit=crop"} alt={book.author} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 </div>
               </div>
               <div className="md:w-2/3 text-center md:text-left">
@@ -414,6 +448,7 @@ export default function ProductDetailsPage() {
               <motion.div 
                 key={relatedBook.id}
                 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1, duration: 0.6 }}
+                onClick={() => router.push(`/shop/${relatedBook.id}`)}
                 className="group cursor-pointer"
               >
                 <div className="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-sm border border-border/40 group-hover:shadow-xl transition-all duration-500">
@@ -448,11 +483,24 @@ export default function ProductDetailsPage() {
                  </div>
                </div>
                <div className="flex items-center justify-between w-full md:w-auto gap-6">
-                 <div className="text-2xl font-bold font-sans">${book.price.toFixed(2)}</div>
-                 <Button onClick={() => addToCart(book)} size="lg" className={cn("rounded-xl px-8 md:px-12 shadow-lg", isInCart && "bg-secondary hover:bg-secondary/90 text-secondary-foreground")}>
-                   {isInCart ? `Added to Cart (${cartQuantity})` : "Add to Cart"}
-                 </Button>
-               </div>
+                  {isFree ? (
+                    <>
+                      <div className="text-2xl font-bold font-sans text-primary">FREE</div>
+                      <Link href={`/read/${book.id}`}>
+                        <Button size="lg" className="rounded-xl px-8 md:px-12 shadow-lg bg-primary text-primary-foreground">
+                          <BookOpen className="w-5 h-5 mr-2" /> Read Now
+                        </Button>
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-2xl font-bold font-sans">${book.price.toFixed(2)}</div>
+                      <Button onClick={() => addToCart(book)} size="lg" className={cn("rounded-xl px-8 md:px-12 shadow-lg", isInCart && "bg-secondary hover:bg-secondary/90 text-secondary-foreground")}>
+                        {isInCart ? `Added to Cart (${cartQuantity})` : "Add to Cart"}
+                      </Button>
+                    </>
+                  )}
+                </div>
             </div>
           </motion.div>
         )}

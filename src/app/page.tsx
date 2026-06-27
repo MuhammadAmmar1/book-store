@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
@@ -13,7 +14,8 @@ import {
   Eye,
   TrendingUp,
   Award,
-  Users
+  Users,
+  Gift
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Navbar } from "@/components/layout/Navbar";
@@ -52,6 +54,7 @@ const staggerContainer = {
 };
 
 export default function Home() {
+  const router = useRouter();
   const { scrollYProgress } = useScroll();
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const rotate1 = useTransform(scrollYProgress, [0, 1], [0, -10]);
@@ -258,7 +261,73 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. WHY READ WITH US (Asymmetric Layout) */}
+        {/* 4. FREE READS - Gift for All Users */}
+        <section className="py-32 relative overflow-hidden bg-gradient-to-b from-background via-primary/[0.02] to-background">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px]" />
+          </div>
+          <div className="container mx-auto px-6 md:px-12 relative z-10">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeUp}
+              className="text-center mb-20"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold uppercase tracking-widest mb-6">
+                <Gift className="w-4 h-4" />
+                Free for Everyone
+              </div>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 tracking-tight">Free Reads</h2>
+              <p className="text-foreground/60 text-lg md:text-xl max-w-2xl mx-auto font-light">
+                As a gift from us, enjoy two hand-picked books completely free. No purchase necessary.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {[
+                mockProducts.find(b => b.id === "book-010")!,
+                mockProducts.find(b => b.id === "book-005")!
+              ].map((book, idx) => (
+                <motion.div
+                  key={book.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: idx * 0.2, ease: luxuryEase }}
+                  className="group relative bg-card/60 backdrop-blur-sm border border-border/40 rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row gap-6 hover:shadow-xl hover:border-primary/30 transition-all duration-500"
+                >
+                  <div className="relative w-full sm:w-40 aspect-[2/3] rounded-xl overflow-hidden shadow-md shrink-0">
+                    <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                    <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+                      FREE
+                    </div>
+                  </div>
+                  <div className="flex flex-col flex-1 min-w-0">
+                    <p className="text-[11px] font-bold text-primary/80 uppercase tracking-widest mb-2">{book.genre}</p>
+                    <h3 className="font-serif text-xl font-bold mb-1.5 truncate">{book.title}</h3>
+                    <p className="text-foreground/60 text-sm font-medium mb-3">{book.author}</p>
+                    <p className="text-foreground/70 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">{book.shortDescription}</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button onClick={() => router.push(`/read/${book.id}`)} className="rounded-full shadow-md hover:shadow-lg transition-all whitespace-nowrap">
+                        Read Free <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                      <div className="flex items-center gap-0.5 text-amber-500">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} className={`w-3.5 h-3.5 ${s <= Math.round(book.rating) ? "fill-current" : "fill-current opacity-20"}`} />
+                        ))}
+                        <span className="text-sm ml-1.5 text-foreground/80 font-semibold">{book.rating}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 5. WHY READ WITH US (Asymmetric Layout) */}
         <section className="py-32 bg-card/20 border-y border-border overflow-hidden relative">
           <div className="container mx-auto px-6 md:px-12">
             <motion.div
