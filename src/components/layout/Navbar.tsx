@@ -346,11 +346,15 @@ function SearchModal() {
                   </div>
                   <div>
                     <h4 className="font-serif font-bold text-foreground/50 mb-4 uppercase tracking-widest text-xs">Popular Authors</h4>
-                    <ul className="space-y-3">
-                      <li><span className="font-medium hover:text-primary cursor-pointer transition-colors">Matt Haig</span></li>
-                      <li><span className="font-medium hover:text-primary cursor-pointer transition-colors">Yuval Noah Harari</span></li>
-                      <li><span className="font-medium hover:text-primary cursor-pointer transition-colors">James Clear</span></li>
-                    </ul>
+                      <ul className="space-y-3">
+                        {["Muhammad Ammar", "Matt Haig", "Yuval Noah Harari", "James Clear"].map(a => (
+                          <li key={a}>
+                            <Link href={`/shop?search=${encodeURIComponent(a)}`} onClick={() => setIsSearchOpen(false)} className="font-medium hover:text-primary cursor-pointer transition-colors">
+                              {a}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                   </div>
                 </div>
               ) : results.length > 0 ? (

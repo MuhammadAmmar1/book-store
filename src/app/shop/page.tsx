@@ -69,7 +69,7 @@ function ShopFallback() {
 function ShopPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState(searchParams.get("search") || "");
   const [view, setView] = React.useState<"grid" | "list">("grid");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = React.useState(false);
   const [selectedBook, setSelectedBook] = React.useState<Book | null>(null);

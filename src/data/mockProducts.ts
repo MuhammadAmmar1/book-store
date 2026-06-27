@@ -23,6 +23,28 @@ export interface Book {
 
 export const mockProducts: Book[] = [
   {
+    id: "book-000",
+    title: "Full Stack Development: From Frontend to Backend",
+    author: "Muhammad Ammar",
+    genre: "Programming",
+    price: 49.99,
+    rating: 4.9,
+    reviewsCount: 3200,
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&h=1200&fit=crop&crop=center",
+    shortDescription: "A comprehensive guide to mastering modern full stack web development.",
+    fullDescription: "This book covers everything you need to become a proficient full stack developer. From HTML, CSS, and JavaScript on the frontend to Node.js, databases, and server deployment on the backend. You'll learn industry best practices, build real-world projects, and understand how all the pieces of modern web development fit together. Perfect for beginners and intermediate developers looking to level up.",
+    publisher: "TechPress Publishing",
+    language: "English",
+    format: "Paperback",
+    publicationYear: 2026,
+    availability: "In Stock",
+    isbn: "978-1-234-56789-7",
+    pages: 520,
+    authorImage: "/ammar_author.jpg",
+    badges: ["New Arrival", "Editor's Pick"],
+    tags: ["full stack", "web development", "javascript", "node.js", "react"]
+  },
+  {
     id: "book-001",
     title: "The Midnight Library",
     author: "Matt Haig",

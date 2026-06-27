@@ -261,7 +261,76 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. FREE READS - Gift for All Users */}
+        {/* 4. AUTHOR SPOTLIGHT */}
+        <section className="py-32 relative overflow-hidden bg-gradient-to-b from-background via-secondary/[0.03] to-background">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full bg-secondary/10 blur-[140px]" />
+          </div>
+          <div className="container mx-auto px-6 md:px-12 relative z-10">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={fadeUp}
+              className="mb-16 text-center"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-bold uppercase tracking-widest mb-6">
+                <Award className="w-4 h-4" />
+                Featured Author
+              </div>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 tracking-tight">Meet Our Author</h2>
+              <p className="text-foreground/60 text-lg md:text-xl max-w-2xl mx-auto font-light">
+                Discover the brilliant minds behind the books you love.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              variants={staggerContainer}
+              className="max-w-5xl mx-auto bg-card/60 backdrop-blur-sm border border-border/40 rounded-3xl p-8 md:p-12 hover:shadow-xl transition-all duration-500"
+            >
+              <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                <motion.div variants={fadeUp} className="md:w-1/3 shrink-0">
+                  <div className="relative aspect-square w-56 md:w-full max-w-[280px] mx-auto rounded-full overflow-hidden border-4 border-secondary/20 shadow-xl">
+                    <img
+                      src={mockProducts.find(b => b.author === "Muhammad Ammar")?.authorImage}
+                      alt="Muhammad Ammar"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                </motion.div>
+                <motion.div variants={fadeUp} className="md:w-2/3 text-center md:text-left">
+                  <span className="text-sm font-bold text-secondary uppercase tracking-widest mb-3 block">About The Author</span>
+                  <h3 className="font-serif text-3xl md:text-4xl font-bold mb-4">Muhammad Ammar</h3>
+                  <p className="text-foreground/70 text-lg leading-relaxed mb-6 font-light">
+                    A passionate full stack developer and educator with years of experience building modern web applications.
+                    Muhammad Ammar&apos;s debut book,{" "}
+                    <span className="font-semibold text-foreground">&ldquo;Full Stack Development: From Frontend to Backend&rdquo;</span>,
+                    has quickly become an essential resource for aspiring developers worldwide. His practical, hands-on
+                    approach makes complex topics accessible to learners at every level.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-4 justify-center md:justify-start">
+                    <Link href={`/shop/${mockProducts.find(b => b.author === "Muhammad Ammar")?.id || "book-000"}`}>
+                      <Button className="rounded-full shadow-md hover:shadow-lg transition-all">
+                        View Book <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                    <Link href="/shop?author=Muhammad+Ammar">
+                      <Button variant="outline" className="rounded-full">
+                        Browse Collection
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* 5. FREE READS - Gift for All Users */}
         <section className="py-32 relative overflow-hidden bg-gradient-to-b from-background via-primary/[0.02] to-background">
           <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
           <div className="absolute inset-0 pointer-events-none">
@@ -327,7 +396,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. WHY READ WITH US (Asymmetric Layout) */}
+        {/* 6. WHY READ WITH US (Asymmetric Layout) */}
         <section className="py-32 bg-card/20 border-y border-border overflow-hidden relative">
           <div className="container mx-auto px-6 md:px-12">
             <motion.div

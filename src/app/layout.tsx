@@ -36,7 +36,7 @@ export const metadata: Metadata = {
       "Discover curated collections of books that inspire imagination, creativity, and lifelong learning.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Leaf & Lantern — Premium Online Bookstore",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Leaf & Lantern | Premium Online Bookstore",
     description: "Discover curated book collections that inspire and enlighten.",
-    images: ["/og-image.png"],
+    images: ["/og-image.svg"],
   },
   robots: {
     index: true,
@@ -69,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <body className={`${inter.variable} ${playfair.variable} antialiased`} suppressHydrationWarning>
         {/* Accessibility: skip to main content */}
         <a href="#main-content" className="skip-link">
