@@ -1,0 +1,16 @@
+{
+  "name": "Leaf & Lantern",
+  "short_name": "Leaf&Lantern",
+  "description": "Premium online bookstore offering curated collections of books.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a5f",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

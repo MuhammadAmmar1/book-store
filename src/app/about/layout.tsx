@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     title: "Our Story | Leaf & Lantern",
     description:
       "A premium independent bookstore born from a love of literature and a belief that books deserve a beautiful home.",
+    url: "https://leafandlantern.com/about",
   },
+  alternates: { canonical: "https://leafandlantern.com/about" },
 };
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {

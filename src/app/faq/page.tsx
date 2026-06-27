@@ -3,6 +3,7 @@
 import * as React from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, HelpCircle, Mail, Package, CreditCard, RotateCcw, User, Shield, Truck, Search } from "lucide-react";
+import { FaqJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import Link from "next/link";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
@@ -219,6 +220,15 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
+      <FaqJsonLd
+        questions={faqGroups.flatMap((g) => g.questions.map((q) => ({ q: q.q, a: q.a })))}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://leafandlantern.com" },
+          { name: "FAQ", url: "https://leafandlantern.com/faq" },
+        ]}
+      />
       <Navbar />
 
       <main>

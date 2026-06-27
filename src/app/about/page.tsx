@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import {
   ArrowRight,
   Award,
@@ -92,6 +93,12 @@ const team = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://leafandlantern.com" },
+          { name: "Our Story", url: "https://leafandlantern.com/about" },
+        ]}
+      />
       <Navbar />
 
       <main>

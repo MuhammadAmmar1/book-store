@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
@@ -64,6 +65,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
+      <BreadcrumbJsonLd
+        items={[{ name: "Home", url: "https://leafandlantern.com" }]}
+      />
       <Navbar />
 
       <main>
@@ -368,7 +372,7 @@ export default function Home() {
                   className="group relative bg-card/60 backdrop-blur-sm border border-border/40 rounded-3xl p-6 md:p-8 flex flex-col sm:flex-row gap-6 hover:shadow-xl hover:border-primary/30 transition-all duration-500"
                 >
                   <div className="relative w-full sm:w-40 aspect-[2/3] rounded-xl overflow-hidden shadow-md shrink-0">
-                    <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
+                    <img src={book.coverImage} alt={`Cover of ${book.title} by ${book.author}`} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" />
                     <div className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
                       FREE
                     </div>
@@ -440,7 +444,7 @@ export default function Home() {
               </div>
               <div className="hidden lg:flex items-center justify-center">
                 <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl">
-                  <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=800&auto=format&fit=crop" alt="Library interior" className="object-cover w-full h-full" />
+                  <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=800&auto=format&fit=crop" alt="Beautiful library interior with bookshelves" className="object-cover w-full h-full" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
               </div>

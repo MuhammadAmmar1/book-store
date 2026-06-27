@@ -181,9 +181,9 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 space-y-8 relative">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
-              animate={currentStep === 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20, position: "absolute", inset: 0, pointerEvents: "none" }}
+              animate={currentStep === 1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -20, pointerEvents: "none" }}
               transition={{ duration: 0.3 }}
-              className={currentStep === 1 ? "" : "invisible"}
+              className={currentStep === 1 ? "" : "invisible absolute inset-0"}
             >
               {/* Shipping Address */}
               <motion.section variants={fadeUp} className="bg-card/40 border border-border/50 rounded-3xl p-8">
@@ -263,9 +263,9 @@ export default function CheckoutPage() {
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
-              animate={currentStep === 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: 20, position: "absolute", inset: 0, pointerEvents: "none" }}
+              animate={currentStep === 2 ? { opacity: 1, x: 0 } : { opacity: 0, x: 20, pointerEvents: "none" }}
               transition={{ duration: 0.3 }}
-              className={currentStep === 2 ? "" : "invisible"}
+              className={currentStep === 2 ? "" : "invisible absolute inset-0"}
             >
               {/* Payment Method */}
               <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="bg-card/40 border border-border/50 rounded-3xl p-8">
@@ -300,9 +300,9 @@ export default function CheckoutPage() {
 
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
-              animate={currentStep === 3 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95, position: "absolute", inset: 0, pointerEvents: "none" }}
+              animate={currentStep === 3 ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95, pointerEvents: "none" }}
               transition={{ duration: 0.3 }}
-              className={currentStep === 3 ? "" : "invisible"}
+              className={currentStep === 3 ? "" : "invisible absolute inset-0"}
             >
               <section className="bg-card/40 border border-border/50 rounded-3xl p-12 text-center flex flex-col items-center">
                 <CheckCircle className="w-16 h-16 text-primary mb-6" />

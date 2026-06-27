@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import {
   AlertCircle,
   ArrowRight,
@@ -88,6 +89,12 @@ const initialValues: FormValues = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://leafandlantern.com" },
+          { name: "Contact", url: "https://leafandlantern.com/contact" },
+        ]}
+      />
       <Navbar />
 
       <main>

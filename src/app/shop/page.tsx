@@ -4,6 +4,7 @@ import * as React from "react";
 import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
+import { BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Search, 
@@ -101,6 +102,12 @@ function ShopPageContent() {
 
   return (
     <div className="min-h-screen bg-background font-sans overflow-hidden">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://leafandlantern.com" },
+          { name: "Shop", url: "https://leafandlantern.com/shop" },
+        ]}
+      />
       <Navbar />
 
       <main className="pt-24">
@@ -324,7 +331,7 @@ function ShopPageContent() {
                               {book.badges[0]}
                             </span>
                           )}
-                          <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 ease-out" />
+                          <img src={book.coverImage} alt={`Cover of ${book.title} by ${book.author}`} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110 ease-out" />
                           
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4 z-10">
                             <div className="transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex gap-2">
@@ -402,7 +409,7 @@ function ShopPageContent() {
               {mockProducts.slice(4, 8).map((book) => (
                 <div key={book.id} className="w-48 shrink-0 snap-start">
                   <div className="w-full aspect-[2/3] rounded-xl overflow-hidden shadow-sm mb-4 border border-border/40">
-                    <img src={book.coverImage} alt={book.title} className="w-full h-full object-cover" />
+                    <img src={book.coverImage} alt={`Cover of ${book.title}`} className="w-full h-full object-cover" />
                   </div>
                   <h4 className="font-serif font-bold text-sm line-clamp-1">{book.title}</h4>
                   <p className="text-xs text-foreground/50">${book.price.toFixed(2)}</p>
@@ -443,7 +450,7 @@ function ShopPageContent() {
               <div className="md:w-2/5 shrink-0 bg-secondary/5 p-8 flex items-center justify-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.03]" />
                 <div className="w-full max-w-[240px] aspect-[2/3] rounded-xl overflow-hidden shadow-2xl relative z-10">
-                  <img src={selectedBook.coverImage} alt={selectedBook.title} className="w-full h-full object-cover" />
+                  <img src={selectedBook.coverImage} alt={`Cover of ${selectedBook.title} by ${selectedBook.author}`} className="w-full h-full object-cover" />
                 </div>
               </div>
               

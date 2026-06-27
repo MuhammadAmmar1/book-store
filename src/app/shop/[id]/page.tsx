@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { motion, useScroll, AnimatePresence } from "framer-motion";
 import {
   ChevronRight, 
@@ -90,10 +91,21 @@ export default function ProductDetailsPage() {
 
   return (
     <div className="min-h-screen bg-background font-sans overflow-x-hidden">
+      <ProductJsonLd book={book} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://leafandlantern.com" },
+          { name: "Shop", url: "https://leafandlantern.com/shop" },
+          { name: book.genre, url: `https://leafandlantern.com/shop?category=${encodeURIComponent(book.genre)}` },
+          { name: book.title, url: `https://leafandlantern.com/shop/${book.id}` },
+        ]}
+      />
+
       <Navbar />
 
       <main className="pt-24 pb-32">
         {/* 1. BREADCRUMB */}
+        <nav aria-label="Breadcrumb">
         <div className="container mx-auto px-6 md:px-12 py-6">
           <motion.div 
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
@@ -105,9 +117,10 @@ export default function ProductDetailsPage() {
             <ChevronRight className="w-4 h-4" />
             <span className="hover:text-primary cursor-pointer transition-colors">{book.genre}</span>
             <ChevronRight className="w-4 h-4" />
-            <span className="text-foreground truncate max-w-[200px]">{book.title}</span>
+            <span className="text-foreground truncate max-w-[200px]" aria-current="page">{book.title}</span>
           </motion.div>
         </div>
+        </nav>
 
         {/* 2. PRODUCT SHOWCASE */}
         <section className="container mx-auto px-6 md:px-12 mb-24">
